@@ -11,5 +11,12 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/home/home.component').then((m) => m.HomeComponent),
   },
+  {
+    path: 'pedido/:id',
+    loadComponent: () =>
+      import('./pages/pedido-detalhe/pedido-detalhe.component').then(
+        (m) => m.PedidoDetalheComponent,
+      ),
+  },
   { path: '**', redirectTo: '' },
 ];

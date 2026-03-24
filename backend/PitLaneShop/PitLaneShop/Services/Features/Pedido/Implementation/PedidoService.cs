@@ -35,6 +35,12 @@ public class PedidoService
             var produto = await _produtoRepository.GetByIdAsync(itemDto.ProdutoId, cancellationToken)
                 ?? throw new InvalidOperationException($"Produto '{itemDto.ProdutoId}' não encontrado.");
 
+            if (produto.QuantidadeEstoque < itemDto.Quantidade)
+                throw new InvalidOperationException(
+                    $"Estoque insuficiente para '{produto.Nome}'. Disponível: {produto.QuantidadeEstoque}, solicitado: {itemDto.Quantidade}.");
+
+            produto.QuantidadeEstoque -= itemDto.Quantidade;
+
             var item = new ItemPedido(
                 valorUnitario: produto.Preco,
                 quantidade: itemDto.Quantidade,

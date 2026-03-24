@@ -1,17 +1,21 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Card } from 'primeng/card';
 import { Tag } from 'primeng/tag';
 import { InputText } from 'primeng/inputtext';
+import { Button } from 'primeng/button';
+import { Badge } from 'primeng/badge';
 import { ClienteService } from '../../core/services/cliente.service';
 import { ProdutoService } from '../../core/services/produto.service';
+import { PedidoService } from '../../core/services/pedido.service';
+import { CartService } from '../../core/services/cart.service';
 import { ClienteResponse } from '../../core/models/cliente.model';
 import { ProdutoResponse, CATEGORIA_LABELS } from '../../core/models/produto.model';
 
 @Component({
   selector: 'app-home',
-  imports: [FormsModule, Card, Tag, InputText],
+  imports: [FormsModule, Card, Tag, InputText, Button, Badge],
   templateUrl: './home.component.html',
 })
 export class HomeComponent implements OnInit {
@@ -19,13 +23,19 @@ export class HomeComponent implements OnInit {
   produtos = signal<ProdutoResponse[]>([]);
   loading = signal(true);
   filtro = signal('');
+  cartOpen = signal(false);
+  finalizando = signal(false);
+  cartError = signal('');
 
   private allProdutos: ProdutoResponse[] = [];
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private clienteService: ClienteService,
     private produtoService: ProdutoService,
+    private pedidoService: PedidoService,
+    public cart: CartService,
   ) {}
 
   async ngOnInit() {
@@ -60,6 +70,40 @@ export class HomeComponent implements OnInit {
           this.categoriaLabel(p.categoria).toLowerCase().includes(termo),
       ),
     );
+  }
+
+  addToCart(produto: ProdutoResponse) {
+    this.cart.addItem(produto);
+    this.cartOpen.set(true);
+  }
+
+  toggleCart() {
+    this.cartOpen.update((v) => !v);
+  }
+
+  async finalizarPedido() {
+    const cliente = this.cliente();
+    if (!cliente || this.cart.items().length === 0) return;
+
+    this.finalizando.set(true);
+    this.cartError.set('');
+
+    try {
+      const pedido = await this.pedidoService.create({
+        clienteId: cliente.id,
+        itens: this.cart.items().map((i) => ({
+          produtoId: i.produto.id,
+          quantidade: i.quantidade,
+        })),
+      });
+      this.cart.clear();
+      this.cartOpen.set(false);
+      await this.router.navigate(['/pedido', pedido.id]);
+    } catch {
+      this.cartError.set('Erro ao finalizar pedido. Tente novamente.');
+    } finally {
+      this.finalizando.set(false);
+    }
   }
 
   categoriaLabel(cat: number): string {
