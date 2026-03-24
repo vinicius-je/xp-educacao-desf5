@@ -29,28 +29,19 @@ public class PedidoService
         CancellationToken cancellationToken = default)
     {
         var pedido = new PedidoEntity(DateOnly.FromDateTime(DateTime.UtcNow), dto.ClienteId, dto.CodigoPromocionalId);
+        await AdicionarItensNoPedito(dto, pedido, cancellationToken);
+        decimal percentualDesconto = await VerificarDesconto(dto, cancellationToken);
 
-        foreach (var itemDto in dto.Itens)
-        {
-            var produto = await _produtoRepository.GetByIdAsync(itemDto.ProdutoId, cancellationToken)
-                ?? throw new InvalidOperationException($"Produto '{itemDto.ProdutoId}' não encontrado.");
+        pedido.CalcularTotal(percentualDesconto);
 
-            if (produto.QuantidadeEstoque < itemDto.Quantidade)
-                throw new InvalidOperationException(
-                    $"Estoque insuficiente para '{produto.Nome}'. Disponível: {produto.QuantidadeEstoque}, solicitado: {itemDto.Quantidade}.");
+        await Repository.AddAsync(pedido, cancellationToken);
+        await UnitOfWork.SaveAsync(cancellationToken);
 
-            produto.QuantidadeEstoque -= itemDto.Quantidade;
+        return MapToResponse(pedido);
+    }
 
-            var item = new ItemPedido(
-                valorUnitario: produto.Preco,
-                quantidade: itemDto.Quantidade,
-                descricao: produto.Nome,
-                pedidoId: pedido.Id,
-                produtoId: produto.Id);
-
-            pedido.AdicionarItem(item);
-        }
-
+    private async Task<decimal> VerificarDesconto(CreatePedidoDto dto, CancellationToken cancellationToken)
+    {
         decimal percentualDesconto = 0;
         if (dto.CodigoPromocionalId.HasValue)
         {
@@ -61,12 +52,24 @@ public class PedidoService
                 percentualDesconto = codigo.Desconto;
         }
 
-        pedido.CalcularTotal(percentualDesconto);
+        return percentualDesconto;
+    }
 
-        await Repository.AddAsync(pedido, cancellationToken);
-        await UnitOfWork.SaveAsync(cancellationToken);
+    private async Task AdicionarItensNoPedito(CreatePedidoDto dto, PedidoEntity pedido, CancellationToken cancellationToken)
+    {
+        foreach (var itemDto in dto.Itens)
+        {
+            var produto = await _produtoRepository.GetByIdAsync(itemDto.ProdutoId, cancellationToken)
+                ?? throw new InvalidOperationException($"Produto '{itemDto.ProdutoId}' não encontrado.");
 
-        return MapToResponse(pedido);
+            if (produto.QuantidadeEstoque < itemDto.Quantidade)
+                throw new InvalidOperationException(
+                    $"Estoque insuficiente para '{produto.Nome}'. Disponível: {produto.QuantidadeEstoque}, solicitado: {itemDto.Quantidade}.");
+
+            produto.DecrementarEstoque(itemDto.Quantidade);
+            var item = new ItemPedido(produto.Preco, itemDto.Quantidade, produto.Nome, pedido.Id, produto.Id);
+            pedido.AdicionarItem(item);
+        }
     }
 
     protected override PedidoResponseDto MapToResponse(PedidoEntity entity) => new()

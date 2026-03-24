@@ -31,4 +31,12 @@ public class Produto : EntidadeBase
         QuantidadeEstoque = quantidadeEstoque;
         Categoria = categoria;
     }
+
+    public void DecrementarEstoque(int quantidade)
+    {
+        if (quantidade <= QuantidadeEstoque)
+        {
+            QuantidadeEstoque -= quantidade;
+        }
+    }
 }
