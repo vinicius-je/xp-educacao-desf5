@@ -1,0 +1,65 @@
+<div class="flex items-center justify-center min-h-dvh p-4 bg-surface">
+  <p-card styleClass="w-full max-w-[440px] shadow-lg rounded-xl bg-white">
+    <ng-template #header>
+      <div class="text-center pt-8 px-8">
+        <h1 class="text-2xl font-bold text-brand">🏁 PitLaneShop</h1>
+        <p class="mt-2 text-sm text-text-muted">Cadastre-se para começar</p>
+      </div>
+    </ng-template>
+
+    <form (ngSubmit)="onSubmit()" class="flex flex-col gap-5">
+      @if (error()) {
+        <p-message severity="error" [text]="error()" />
+      }
+
+      <div class="flex flex-col gap-1.5">
+        <label for="nome" class="text-sm font-semibold text-text">Nome</label>
+        <input
+          id="nome"
+          type="text"
+          pInputText
+          class="w-full"
+          placeholder="Seu nome completo"
+          [ngModel]="nome()"
+          (ngModelChange)="nome.set($event)"
+          name="nome"
+        />
+      </div>
+
+      <div class="flex flex-col gap-1.5">
+        <label for="email" class="text-sm font-semibold text-text">Email</label>
+        <input
+          id="email"
+          type="email"
+          pInputText
+          class="w-full"
+          placeholder="seu@email.com"
+          [ngModel]="email()"
+          (ngModelChange)="email.set($event)"
+          name="email"
+        />
+      </div>
+
+      <div class="flex flex-col gap-1.5">
+        <label for="telefone" class="text-sm font-semibold text-text">Telefone</label>
+        <input
+          id="telefone"
+          type="tel"
+          pInputText
+          class="w-full"
+          placeholder="(11) 99999-9999"
+          [ngModel]="telefone()"
+          (ngModelChange)="telefone.set($event)"
+          name="telefone"
+        />
+      </div>
+
+      <p-button
+        type="submit"
+        label="Entrar"
+        [loading]="loading()"
+        styleClass="w-full"
+      />
+    </form>
+  </p-card>
+</div>
