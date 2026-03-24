@@ -20,8 +20,15 @@ public class ClientesController : ControllerBase
     [HttpGet(Name = nameof(ListarClientesAsync))]
     [ProducesResponseType(typeof(IEnumerable<ClienteResponseDto>), StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<ClienteResponseDto>>> ListarClientesAsync(
+        [FromQuery] string? email,
         CancellationToken cancellationToken)
     {
+        if (!string.IsNullOrWhiteSpace(email))
+        {
+            var cliente = await _clienteService.GetByEmailAsync(email, cancellationToken);
+            return Ok(cliente is null ? [] : new[] { cliente });
+        }
+
         var itens = await _clienteService.GetAllAsync(cancellationToken);
         return Ok(itens);
     }

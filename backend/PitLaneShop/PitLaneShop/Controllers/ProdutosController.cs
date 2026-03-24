@@ -20,9 +20,12 @@ public class ProdutosController : ControllerBase
     [HttpGet(Name = nameof(ListarProdutosAsync))]
     [ProducesResponseType(typeof(IEnumerable<ProdutoResponseDto>), StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<ProdutoResponseDto>>> ListarProdutosAsync(
+        [FromQuery] string? nome,
         CancellationToken cancellationToken)
     {
-        var itens = await _produtoService.GetAllAsync(cancellationToken);
+        var itens = string.IsNullOrWhiteSpace(nome)
+            ? await _produtoService.GetAllAsync(cancellationToken)
+            : await _produtoService.GetByNomeAsync(nome, cancellationToken);
         return Ok(itens);
     }
 

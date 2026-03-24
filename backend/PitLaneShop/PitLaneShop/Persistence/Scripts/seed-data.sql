@@ -13,12 +13,12 @@ DECLARE @ProdAcess1     UNIQUEIDENTIFIER = NEWID();
 
 INSERT INTO Produtos (Id, Nome, Imagem, Descricao, Preco, QuantidadeEstoque, Categoria, DataCriacao)
 VALUES
-    (@ProdOleo1,   'Oleo Motor 5W30 Sintetico',     'https://via.placeholder.com/200', 'Oleo sintetico para motores modernos, 1L',                89.90,  50, 0,  GETUTCDATE()),
-    (@ProdPneu1,   'Pneu 205/55 R16',               'https://via.placeholder.com/200', 'Pneu radial para veiculos de passeio',                   420.00, 30, 1,  GETUTCDATE()),
-    (@ProdFreio1,  'Pastilha de Freio Dianteira',    'https://via.placeholder.com/200', 'Jogo de pastilhas de freio ceramicas',                   185.00, 40, 2,  GETUTCDATE()),
-    (@ProdFiltro1, 'Filtro de Ar Esportivo',         'https://via.placeholder.com/200', 'Filtro de ar de alta vazao lavavel',                     250.00, 20, 5,  GETUTCDATE()),
-    (@ProdLuz1,    'Kit Lampada LED H7',             'https://via.placeholder.com/200', 'Par de lampadas LED 6000K super brancas',                159.90, 35, 10, GETUTCDATE()),
-    (@ProdAcess1,  'Tapete Borracha Universal',      'https://via.placeholder.com/200', 'Jogo de tapetes de borracha com borda alta',              79.90, 60, 8,  GETUTCDATE());
+    (@ProdOleo1,   'Oleo Motor 5W30 Sintetico',     'https://http2.mlstatic.com/D_NQ_NP_2X_667823-MLA99394411168_112025-F.webp', 'Oleo sintetico para motores modernos, 1L',                89.90,  50, 0,  GETUTCDATE()),
+    (@ProdPneu1,   'Pneu 205/55 R16',               'https://http2.mlstatic.com/D_NQ_NP_2X_974231-MLU77331934845_062024-F.webp', 'Pneu radial para veiculos de passeio',                   420.00, 30, 1,  GETUTCDATE()),
+    (@ProdFreio1,  'Pastilha de Freio Dianteira',    'https://http2.mlstatic.com/D_NQ_NP_2X_804686-MLB101084546832_122025-F.webp', 'Jogo de pastilhas de freio ceramicas',                   185.00, 40, 2,  GETUTCDATE()),
+    (@ProdFiltro1, 'Filtro de Ar Esportivo',         'https://http2.mlstatic.com/D_NQ_NP_2X_815414-MLB91197673410_092025-F-filtro-de-ar-esportivo-duplo-fluxo-universal-ronco-potencia.webp', 'Filtro de ar de alta vazao lavavel',                     250.00, 20, 5,  GETUTCDATE());
+    --(@ProdLuz1,    'Kit Lampada LED H7',             'https://via.placeholder.com/200', 'Par de lampadas LED 6000K super brancas',                159.90, 35, 10, GETUTCDATE()),
+    --(@ProdAcess1,  'Tapete Borracha Universal',      'https://via.placeholder.com/200', 'Jogo de tapetes de borracha com borda alta',              79.90, 60, 8,  GETUTCDATE());
 
 -- ============================================
 -- CodigosPromocionais

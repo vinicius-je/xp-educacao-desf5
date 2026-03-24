@@ -9,9 +9,19 @@ namespace PitLaneShop.Services.Features.Cliente.Implementation;
 public class ClienteService
     : BaseCrudService<ClienteEntity, ClienteResponseDto, CreateClienteDto, UpdateClienteDto>, IClienteService
 {
+    private readonly IClienteRepository _clienteRepository;
+
     public ClienteService(IClienteRepository repository, IUnitOfWork unitOfWork)
         : base(repository, unitOfWork)
     {
+        _clienteRepository = repository;
+    }
+
+    public async Task<ClienteResponseDto?> GetByEmailAsync(
+        string email, CancellationToken cancellationToken = default)
+    {
+        var entity = await _clienteRepository.GetByEmailAsync(email, cancellationToken);
+        return entity is null ? null : MapToResponse(entity);
     }
 
     protected override ClienteResponseDto MapToResponse(ClienteEntity entity) => new()

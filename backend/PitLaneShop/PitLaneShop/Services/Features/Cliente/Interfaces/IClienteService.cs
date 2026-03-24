@@ -5,4 +5,5 @@ namespace PitLaneShop.Services.Features.Cliente.Interfaces;
 
 public interface IClienteService : IBaseCrudService<ClienteResponseDto, CreateClienteDto, UpdateClienteDto>
 {
+    Task<ClienteResponseDto?> GetByEmailAsync(string email, CancellationToken cancellationToken = default);
 }

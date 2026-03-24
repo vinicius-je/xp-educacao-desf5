@@ -9,9 +9,19 @@ namespace PitLaneShop.Services.Features.Produto.Implementation;
 public class ProdutoService
     : BaseCrudService<ProdutoEntity, ProdutoResponseDto, CreateProdutoDto, UpdateProdutoDto>, IProdutoService
 {
+    private readonly IProdutoRepository _produtoRepository;
+
     public ProdutoService(IProdutoRepository repository, IUnitOfWork unitOfWork)
         : base(repository, unitOfWork)
     {
+        _produtoRepository = repository;
+    }
+
+    public async Task<List<ProdutoResponseDto>> GetByNomeAsync(
+        string nome, CancellationToken cancellationToken = default)
+    {
+        var list = await _produtoRepository.GetByNomeAsync(nome, cancellationToken);
+        return list.Select(MapToResponse).ToList();
     }
 
     protected override ProdutoResponseDto MapToResponse(ProdutoEntity entity) => new()
