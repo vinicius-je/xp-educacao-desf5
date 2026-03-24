@@ -3,63 +3,110 @@
     <ng-template #header>
       <div class="text-center pt-8 px-8">
         <h1 class="text-2xl font-bold text-brand">🏁 PitLaneShop</h1>
-        <p class="mt-2 text-sm text-text-muted">Cadastre-se para começar</p>
+        <p class="mt-2 text-sm text-text-muted">
+          {{ isLoginMode() ? 'Entre com seu email' : 'Crie sua conta' }}
+        </p>
       </div>
     </ng-template>
 
-    <form (ngSubmit)="onSubmit()" class="flex flex-col gap-5">
-      @if (error()) {
-        <p-message severity="error" [text]="error()" />
-      }
+    @if (error()) {
+      <p-message severity="error" [text]="error()" styleClass="mb-4 w-full" />
+    }
 
-      <div class="flex flex-col gap-1.5">
-        <label for="nome" class="text-sm font-semibold text-text">Nome</label>
-        <input
-          id="nome"
-          type="text"
-          pInputText
-          class="w-full"
-          placeholder="Seu nome completo"
-          [ngModel]="nome()"
-          (ngModelChange)="nome.set($event)"
-          name="nome"
+    @if (isLoginMode()) {
+      <form (ngSubmit)="onLogin()" class="flex flex-col gap-5">
+        <div class="flex flex-col gap-1.5">
+          <label for="loginEmail" class="text-sm font-semibold text-text">Email</label>
+          <input
+            id="loginEmail"
+            type="email"
+            pInputText
+            class="w-full"
+            placeholder="seu@email.com"
+            [ngModel]="loginEmail()"
+            (ngModelChange)="loginEmail.set($event)"
+            name="loginEmail"
+          />
+        </div>
+
+        <p-button
+          type="submit"
+          label="Entrar"
+          [loading]="loading()"
+          styleClass="w-full"
         />
-      </div>
+      </form>
 
-      <div class="flex flex-col gap-1.5">
-        <label for="email" class="text-sm font-semibold text-text">Email</label>
-        <input
-          id="email"
-          type="email"
-          pInputText
-          class="w-full"
-          placeholder="seu@email.com"
-          [ngModel]="email()"
-          (ngModelChange)="email.set($event)"
-          name="email"
+      <div class="text-center mt-5">
+        <span class="text-sm text-text-muted">Não tem conta? </span>
+        <button
+          class="text-sm font-semibold text-brand hover:underline cursor-pointer bg-transparent border-none p-0"
+          (click)="toggleMode()"
+        >
+          Cadastre-se
+        </button>
+      </div>
+    } @else {
+      <form (ngSubmit)="onRegister()" class="flex flex-col gap-5">
+        <div class="flex flex-col gap-1.5">
+          <label for="nome" class="text-sm font-semibold text-text">Nome</label>
+          <input
+            id="nome"
+            type="text"
+            pInputText
+            class="w-full"
+            placeholder="Seu nome completo"
+            [ngModel]="nome()"
+            (ngModelChange)="nome.set($event)"
+            name="nome"
+          />
+        </div>
+
+        <div class="flex flex-col gap-1.5">
+          <label for="email" class="text-sm font-semibold text-text">Email</label>
+          <input
+            id="email"
+            type="email"
+            pInputText
+            class="w-full"
+            placeholder="seu@email.com"
+            [ngModel]="email()"
+            (ngModelChange)="email.set($event)"
+            name="email"
+          />
+        </div>
+
+        <div class="flex flex-col gap-1.5">
+          <label for="telefone" class="text-sm font-semibold text-text">Telefone</label>
+          <input
+            id="telefone"
+            type="tel"
+            pInputText
+            class="w-full"
+            placeholder="(11) 99999-9999"
+            [ngModel]="telefone()"
+            (ngModelChange)="telefone.set($event)"
+            name="telefone"
+          />
+        </div>
+
+        <p-button
+          type="submit"
+          label="Cadastrar"
+          [loading]="loading()"
+          styleClass="w-full"
         />
-      </div>
+      </form>
 
-      <div class="flex flex-col gap-1.5">
-        <label for="telefone" class="text-sm font-semibold text-text">Telefone</label>
-        <input
-          id="telefone"
-          type="tel"
-          pInputText
-          class="w-full"
-          placeholder="(11) 99999-9999"
-          [ngModel]="telefone()"
-          (ngModelChange)="telefone.set($event)"
-          name="telefone"
-        />
+      <div class="text-center mt-5">
+        <span class="text-sm text-text-muted">Já tem conta? </span>
+        <button
+          class="text-sm font-semibold text-brand hover:underline cursor-pointer bg-transparent border-none p-0"
+          (click)="toggleMode()"
+        >
+          Entrar
+        </button>
       </div>
-
-      <p-button
-        type="submit"
-        label="Entrar"
-        [loading]="loading()"
-        styleClass="w-full"
-      />
-    </form>
+    }
   </p-card>
 </div>

@@ -13,4 +13,11 @@ export class ClienteService {
     const response = await api.get<ClienteResponse>(`/clientes/${id}`);
     return response.data;
   }
+
+  async getByEmail(email: string): Promise<ClienteResponse | null> {
+    const response = await api.get<ClienteResponse[]>('/clientes', {
+      params: { email },
+    });
+    return response.data.length > 0 ? response.data[0] : null;
+  }
 }
