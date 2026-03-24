@@ -1,0 +1,30 @@
+version: '3.4'
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: pitlaneshop-sqlserver
+    environment:
+      ACCEPT_EULA: 'Y'
+      MSSQL_SA_PASSWORD: 'PitLaneShop@Dev2024'
+    ports:
+      - '1433:1433'
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    restart: unless-stopped
+
+  pitlaneshop:
+    image: ${DOCKER_REGISTRY-}pitlaneshop
+    build:
+      context: .
+      dockerfile: PitLaneShop/Dockerfile
+    ports:
+      - '3001:8080'
+      - '3000:8081'
+    depends_on:
+      - sqlserver
+    environment:
+      ConnectionStrings__DefaultConnection: "Server=sqlserver,1433;Database=PitLaneShop;User Id=sa;Password=PitLaneShop@Dev2024;TrustServerCertificate=True;MultipleActiveResultSets=true"
+
+volumes:
+  sqlserver_data:

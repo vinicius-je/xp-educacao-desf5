@@ -1,0 +1,6 @@
+@PitLaneShop_HostAddress = http://localhost:7134
+
+GET {{PitLaneShop_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
