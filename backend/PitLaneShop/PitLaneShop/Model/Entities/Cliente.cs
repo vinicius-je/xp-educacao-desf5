@@ -8,7 +8,7 @@ public class Cliente : EntidadeBase
 
     public string Telefone { get; set; } = string.Empty;
 
-    public ICollection<Aluguel> Alugueis { get; set; } = new List<Aluguel>();
+    public ICollection<Pedido> Pedidos { get; set; } = new List<Pedido>();
 
     public Cliente()
     {

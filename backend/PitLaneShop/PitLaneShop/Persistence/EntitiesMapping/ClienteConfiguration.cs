@@ -18,9 +18,9 @@ public class ClienteConfiguration : IEntityTypeConfiguration<Cliente>
 
         builder.HasIndex(c => c.Email).IsUnique();
 
-        builder.HasMany(c => c.Alugueis)
-            .WithOne(a => a.Cliente)
-            .HasForeignKey(a => a.ClienteId)
+        builder.HasMany(c => c.Pedidos)
+            .WithOne(p => p.Cliente)
+            .HasForeignKey(p => p.ClienteId)
             .OnDelete(DeleteBehavior.Restrict);
     }
 }

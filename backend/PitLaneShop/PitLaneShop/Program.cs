@@ -1,14 +1,14 @@
 using PitLaneShop.Model.Repositories;
 using PitLaneShop.Persistence;
 using PitLaneShop.Persistence.Repositories;
-using PitLaneShop.Services.Features.Carro.Implementation;
-using PitLaneShop.Services.Features.Carro.Interfaces;
 using PitLaneShop.Services.Features.Cliente.Implementation;
 using PitLaneShop.Services.Features.Cliente.Interfaces;
-using PitLaneShop.Services.Features.RealizarAluguel.Implementation;
-using PitLaneShop.Services.Features.RealizarAluguel.Interfaces;
-using PitLaneShop.Services.Features.VisualizarVeiculos.Implementation;
-using PitLaneShop.Services.Features.VisualizarVeiculos.Interfaces;
+using PitLaneShop.Services.Features.CodigoPromocional.Implementation;
+using PitLaneShop.Services.Features.CodigoPromocional.Interfaces;
+using PitLaneShop.Services.Features.Pedido.Implementation;
+using PitLaneShop.Services.Features.Pedido.Interfaces;
+using PitLaneShop.Services.Features.Produto.Implementation;
+using PitLaneShop.Services.Features.Produto.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,17 +22,15 @@ builder.Services.AddDbContext<PitLaneShopDbContext>(options =>
 builder.Services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<PitLaneShopDbContext>());
 
 builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
-builder.Services.AddScoped<IVeiculoModeloRepository, VeiculoModeloRepository>();
-builder.Services.AddScoped<ICarroRepository, CarroRepository>();
-builder.Services.AddScoped<ITarifaDiariaRepository, TarifaDiariaRepository>();
-builder.Services.AddScoped<IAluguelRepository, AluguelRepository>();
+builder.Services.AddScoped<IPedidoRepository, PedidoRepository>();
+builder.Services.AddScoped<IItemPedidoRepository, ItemPedidoRepository>();
+builder.Services.AddScoped<IProdutoRepository, ProdutoRepository>();
+builder.Services.AddScoped<ICodigoPromocionalRepository, CodigoPromocionalRepository>();
 
 builder.Services.AddScoped<IClienteService, ClienteService>();
-builder.Services.AddScoped<ICarroService, CarroService>();
-builder.Services.AddScoped<IVisualizarVeiculosService, VisualizarVeiculosService>();
-builder.Services.AddScoped<IRealizarAluguelService, RealizarAluguelService>();
-
-// Add services to the container.
+builder.Services.AddScoped<IPedidoService, PedidoService>();
+builder.Services.AddScoped<IProdutoService, ProdutoService>();
+builder.Services.AddScoped<ICodigoPromocionalService, CodigoPromocionalService>();
 
 builder.Services.AddCors(options =>
 {
@@ -43,7 +41,6 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -51,7 +48,6 @@ var app = builder.Build();
 
 EnsureDatabaseAndApplyMigrations(app);
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -72,7 +68,7 @@ static void EnsureDatabaseAndApplyMigrations(WebApplication app)
     var db = scope.ServiceProvider.GetRequiredService<PitLaneShopDbContext>();
     db.Database.Migrate();
 
-    if (db.VeiculosModelo.Any())
+    if (db.Produtos.Any())
         return;
 
     var assembly = typeof(PitLaneShopDbContext).Assembly;

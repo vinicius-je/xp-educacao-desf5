@@ -1,0 +1,34 @@
+using PitLaneShop.Model.Enums;
+
+namespace PitLaneShop.Model.Entities;
+
+public class Pedido : EntidadeBase
+{
+    public DateOnly DataPedido { get; set; }
+
+    public decimal ValorTotal { get; set; }
+
+    public StatusPedido Status { get; set; }
+
+    public Guid ClienteId { get; set; }
+
+    public Cliente? Cliente { get; set; }
+
+    public Guid? CodigoPromocionalId { get; set; }
+
+    public CodigoPromocional? CodigoPromocional { get; set; }
+
+    public ICollection<ItemPedido> Itens { get; set; } = new List<ItemPedido>();
+
+    public Pedido()
+    {
+    }
+
+    public Pedido(DateOnly dataPedido, Guid clienteId, Guid? codigoPromocionalId = null)
+    {
+        DataPedido = dataPedido;
+        ClienteId = clienteId;
+        CodigoPromocionalId = codigoPromocionalId;
+        Status = StatusPedido.Em_andamento;
+    }
+}

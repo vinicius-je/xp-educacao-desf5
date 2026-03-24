@@ -2,38 +2,42 @@
 -- Run this script after migrations have been applied.
 
 -- ============================================
--- VeiculosModelo
+-- Produtos
 -- ============================================
-DECLARE @ModeloHB20s  UNIQUEIDENTIFIER = NEWID();
-DECLARE @ModeloS10    UNIQUEIDENTIFIER = NEWID();
-DECLARE @ModeloOnix  UNIQUEIDENTIFIER = NEWID();
+DECLARE @ProdOleo1      UNIQUEIDENTIFIER = NEWID();
+DECLARE @ProdPneu1      UNIQUEIDENTIFIER = NEWID();
+DECLARE @ProdFreio1     UNIQUEIDENTIFIER = NEWID();
+DECLARE @ProdFiltro1    UNIQUEIDENTIFIER = NEWID();
+DECLARE @ProdLuz1       UNIQUEIDENTIFIER = NEWID();
+DECLARE @ProdAcess1     UNIQUEIDENTIFIER = NEWID();
 
-INSERT INTO VeiculosModelo (Id, Marca, Modelo, Categoria, DataCriacao)
+INSERT INTO Produtos (Id, Nome, Imagem, Descricao, Preco, QuantidadeEstoque, Categoria, DataCriacao)
 VALUES
-    (@ModeloHB20s, 'Hyundai',  'HB20s', 1, GETUTCDATE()),  
-    (@ModeloS10,   'Chevrolet',   'S10',   5, GETUTCDATE()),  
-    (@ModeloOnix, 'Chevrolet','Onix', 1, GETUTCDATE()); 
-
--- ============================================
--- Carros
--- ============================================
-INSERT INTO Carros (Id, Placa, Quilometragem, Status, Imagem, VeiculoModeloId, DataCriacao)
-VALUES
-    (NEWID(), 'ABC-1234', '1500',  0, 'https://www.localiza.com/brasil-site/geral/Frota/HB2C.png', @ModeloHB20s, GETUTCDATE()),
-    (NEWID(), 'DEF-5678', '300',   0, 'https://www.localiza.com/brasil-site/geral/Frota/S10X.png', @ModeloS10,   GETUTCDATE()),
-    (NEWID(), 'GHI-9012', '8500',  0, 'https://www.localiza.com/brasil-site/geral/Frota/ONIT.png', @ModeloOnix,  GETUTCDATE()),
-    (NEWID(), 'JKL-3456', '12000', 0, 'https://www.localiza.com/brasil-site/geral/Frota/HB2C.png', @ModeloHB20s, GETUTCDATE()),
-    (NEWID(), 'MNO-7890', '4200',  0, 'https://www.localiza.com/brasil-site/geral/Frota/S10X.png', @ModeloS10,   GETUTCDATE()),
-    (NEWID(), 'PQR-1122', '950',   0, 'https://www.localiza.com/brasil-site/geral/Frota/ONIT.png', @ModeloOnix,  GETUTCDATE()),
-    (NEWID(), 'STU-3344', '27000', 1, 'https://www.localiza.com/brasil-site/geral/Frota/HB2C.png', @ModeloHB20s, GETUTCDATE()),
-    (NEWID(), 'VWX-5566', '18500', 1, 'https://www.localiza.com/brasil-site/geral/Frota/S10X.png', @ModeloS10,   GETUTCDATE()),
-    (NEWID(), 'YZA-7788', '6100',  0, 'https://www.localiza.com/brasil-site/geral/Frota/ONIT.png', @ModeloOnix,  GETUTCDATE());  
+    (@ProdOleo1,   'Oleo Motor 5W30 Sintetico',     'https://via.placeholder.com/200', 'Oleo sintetico para motores modernos, 1L',                89.90,  50, 0,  GETUTCDATE()),
+    (@ProdPneu1,   'Pneu 205/55 R16',               'https://via.placeholder.com/200', 'Pneu radial para veiculos de passeio',                   420.00, 30, 1,  GETUTCDATE()),
+    (@ProdFreio1,  'Pastilha de Freio Dianteira',    'https://via.placeholder.com/200', 'Jogo de pastilhas de freio ceramicas',                   185.00, 40, 2,  GETUTCDATE()),
+    (@ProdFiltro1, 'Filtro de Ar Esportivo',         'https://via.placeholder.com/200', 'Filtro de ar de alta vazao lavavel',                     250.00, 20, 5,  GETUTCDATE()),
+    (@ProdLuz1,    'Kit Lampada LED H7',             'https://via.placeholder.com/200', 'Par de lampadas LED 6000K super brancas',                159.90, 35, 10, GETUTCDATE()),
+    (@ProdAcess1,  'Tapete Borracha Universal',      'https://via.placeholder.com/200', 'Jogo de tapetes de borracha com borda alta',              79.90, 60, 8,  GETUTCDATE());
 
 -- ============================================
--- TarifasDiarias
+-- CodigosPromocionais
 -- ============================================
-INSERT INTO TarifasDiarias (Id, ValorDiaria, ValorMulta, EhValorDiariaVigente, DataInicioVigencia, DataFimVigencia, VeiculoModeloId, DataCriacao)
+DECLARE @Promo1 UNIQUEIDENTIFIER = NEWID();
+DECLARE @Promo2 UNIQUEIDENTIFIER = NEWID();
+
+INSERT INTO CodigosPromocionais (Id, Codigo, Desconto, EhValido, DataCriacao)
 VALUES
-    (NEWID(), 150.00, 75.00,  1, '2026-01-01', NULL, @ModeloHB20s, GETUTCDATE()),
-    (NEWID(), 170.00, 85.00,  1, '2026-01-01', NULL, @ModeloS10,   GETUTCDATE()),
-    (NEWID(), 220.00, 110.00, 1, '2026-01-01', NULL, @ModeloOnix, GETUTCDATE());
+    (@Promo1, 'PITLANE10', 10.00, 1, GETUTCDATE()),
+    (@Promo2, 'TURBO20',   20.00, 1, GETUTCDATE());
+
+-- ============================================
+-- Clientes
+-- ============================================
+DECLARE @Cliente1 UNIQUEIDENTIFIER = NEWID();
+DECLARE @Cliente2 UNIQUEIDENTIFIER = NEWID();
+
+INSERT INTO Clientes (Id, Nome, Email, Telefone, DataCriacao)
+VALUES
+    (@Cliente1, 'Carlos Silva',  'carlos.silva@email.com',  '(11) 99999-0001', GETUTCDATE()),
+    (@Cliente2, 'Ana Oliveira',  'ana.oliveira@email.com',  '(21) 98888-0002', GETUTCDATE());

@@ -13,13 +13,13 @@ public class PitLaneShopDbContext : DbContext, IUnitOfWork
 
     public DbSet<Cliente> Clientes => Set<Cliente>();
 
-    public DbSet<VeiculoModelo> VeiculosModelo => Set<VeiculoModelo>();
+    public DbSet<Pedido> Pedidos => Set<Pedido>();
 
-    public DbSet<Carro> Carros => Set<Carro>();
+    public DbSet<ItemPedido> ItensPedido => Set<ItemPedido>();
 
-    public DbSet<TarifaDiaria> TarifasDiarias => Set<TarifaDiaria>();
+    public DbSet<Produto> Produtos => Set<Produto>();
 
-    public DbSet<Aluguel> Alugueis => Set<Aluguel>();
+    public DbSet<CodigoPromocional> CodigosPromocionais => Set<CodigoPromocional>();
 
     public async Task SaveAsync(CancellationToken cancellationToken = default)
     {

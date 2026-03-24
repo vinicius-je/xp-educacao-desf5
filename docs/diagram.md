@@ -2,95 +2,95 @@
 
 Diagrama alinhado ao código em `backend/PitLaneShop/PitLaneShop/Model/`.
 
-Todas as entidades herdam **`EntidadeBase`**: `Guid Id`, `DateTime DataCriacao`, `DateTime DataAtualizacao` (abaixo repetido em cada bloco para leitura no diagrama).
+Todas as entidades herdam **`EntidadeBase`**: `Guid Id`, `DateTime DataCriacao`, `DateTime? DataAtualizacao` (abaixo repetido em cada bloco para leitura no diagrama).
 
-```erDiagram
-    Cliente ||--o{ Aluguel : "realiza"
-    Carro ||--o{ Aluguel : "objeto do"
-    VeiculoModelo ||--|{ Carro : "modelo de"
-    VeiculoModelo ||--|{ TarifaDiaria : "tarifa por"
+```classDiagram
+  direction TB
 
-    Cliente {
-        guid Id PK
-        datetime DataCriacao
-        datetime DataAtualizacao
-        string Nome
-        string Email
-        string Telefone
-    }
+  class Cliente {
+    +Guid Id
+    +string Nome
+    +string Email
+    +string Telefone
+  }
 
-    Aluguel {
-        guid Id PK
-        datetime DataCriacao
-        datetime DataAtualizacao
-        date DataRetirada
-        date DataDevolucaoPrevista
-        date DataDevolucao
-        int Diarias
-        decimal ValorTotal
-        decimal ValorMulta
-        guid ClienteId FK
-        guid CarroId FK
-    }
+  class Pedido {
+    +Guid Id
+    +DateOnly DataPedido
+    +decimal ValorTotal
+    +StatusPedido Status
+    +Guid ClienteId
+    +Guid? CodigoPromocionalId
+  }
 
-    Carro {
-        guid Id PK
-        datetime DataCriacao
-        datetime DataAtualizacao
-        string Placa
-        string Quilometragem
-        StatusCarro Status
-        guid VeiculoModeloId FK
-    }
+  class CodigoPromocional {
+    +Guid Id
+    +string Codigo
+    +decimal Desconto
+    +bool EhValido
+  }
 
-    VeiculoModelo {
-        guid Id PK
-        datetime DataCriacao
-        datetime DataAtualizacao
-        string Marca
-        string Modelo
-        CategoriaVeiculo Categoria
-    }
+  class ItemPedido {
+    +Guid Id
+    +decimal ValorUnitario
+    +decimal ValorTotal
+    +int Quantidade
+    +string Descricao
+    +Guid PedidoId
+    +Guid ProdutoId
+  }
 
-    TarifaDiaria {
-        guid Id PK
-        datetime DataCriacao
-        datetime DataAtualizacao
-        decimal ValorDiaria
-        decimal ValorMulta
-        bool EhValorDiariaVigente
-        date DataInicioVigencia
-        date DataFimVigencia
-        guid VeiculoModeloId FK
-    }
+  class Produto {
+    +Guid Id
+    +string Nome
+    +string Imagem
+    +string Descricao
+    +decimal Preco
+    +int QuantidadeEstoque
+    +CategoriaProduto Categoria
+  }
+
+  Cliente "1" --> "0..*" Pedido : Realiza um
+  Pedido "1" --> "1..*" ItemPedido : contém
+  Pedido "0..*" --> "0..1" CodigoPromocional : aplica
+  ItemPedido "0..*" --> "1" Produto : referencia
 ```
 
 ## Tipos no código C#
 
 | No diagrama | Tipo em C# |
 |-------------|------------|
-| `guid` | `Guid` |
-| `date` | `DateOnly` |
-| `datetime` | `DateTime` |
+| `Guid` | `Guid` |
+| `DateOnly` | `DateOnly` |
+| `DateTime` | `DateTime` |
+| `decimal` | `decimal` |
 
-**Nuláveis no código:** `Aluguel.DataDevolucao` (`DateOnly?`), `TarifaDiaria.DataFimVigencia` (`DateOnly?`). Navegações (`Cliente`, `Carro`, `VeiculoModelo`) são referências opcionais nas FKs.
+**Nuláveis no código:** `Pedido.CodigoPromocionalId` (`Guid?`), `EntidadeBase.DataAtualizacao` (`DateTime?`). Navegações (`Cliente`, `Pedido`, `Produto`, `CodigoPromocional`) são referências opcionais nas FKs.
 
 ## Enums (`Model/Enums`)
 
-### `StatusCarro`
+### `StatusPedido`
 
-- `Disponivel` (0)
-- `Alugado` (1)
+- `Em_andamento` (0)
+- `Pago` (1)
+- `Cancelado` (2)
+- `Em_rota` (3)
+- `Entregue` (4)
 
-### `CategoriaVeiculo`
+### `CategoriaProduto`
 
-- `Compacto` (0)
-- `Sedan` (1)
-- `Hatch` (2)
-- `Esportivo` (3)
-- `Suv` (4)
-- `Pickup` (5)
-- `Minivan` (6)
-- `Coupe` (7)
-- `Conversivel` (8)
-- `Utilitario` (9)
+- `OleoLubrificante` (0)
+- `PneuRoda` (1)
+- `Freio` (2)
+- `Suspensao` (3)
+- `EletricaBateria` (4)
+- `Filtros` (5)
+- `Escapamento` (6)
+- `CarroceriaPintura` (7)
+- `AcessoriosInterior` (8)
+- `SomMultimidia` (9)
+- `Iluminacao` (10)
+- `LimpezaConservacao` (11)
+- `Ferramentas` (12)
+- `Seguranca` (13)
+- `PerformanceTuning` (14)
