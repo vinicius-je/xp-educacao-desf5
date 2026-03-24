@@ -10,9 +10,13 @@ public class PedidoResponseDto
 
     public decimal ValorTotal { get; set; }
 
+    public decimal ValorDesconto { get; set; }
+
     public StatusPedido Status { get; set; }
 
     public Guid ClienteId { get; set; }
 
     public Guid? CodigoPromocionalId { get; set; }
+
+    public List<ItemPedidoResponseDto> Itens { get; set; } = new();
 }

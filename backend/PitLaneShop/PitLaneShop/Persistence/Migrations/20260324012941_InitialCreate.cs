@@ -69,6 +69,7 @@ namespace PitLaneShop.Persistence.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     DataPedido = table.Column<DateOnly>(type: "date", nullable: false),
                     ValorTotal = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    ValorDesconto = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
                     ClienteId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CodigoPromocionalId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),

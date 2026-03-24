@@ -12,7 +12,7 @@ using PitLaneShop.Persistence;
 namespace PitLaneShop.Persistence.Migrations
 {
     [DbContext(typeof(PitLaneShopDbContext))]
-    [Migration("20260324012009_InitialCreate")]
+    [Migration("20260324012941_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -158,6 +158,10 @@ namespace PitLaneShop.Persistence.Migrations
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
+
+                    b.Property<decimal>("ValorDesconto")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("ValorTotal")
                         .HasPrecision(18, 2)

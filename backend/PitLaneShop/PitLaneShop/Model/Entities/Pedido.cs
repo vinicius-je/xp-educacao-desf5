@@ -8,6 +8,8 @@ public class Pedido : EntidadeBase
 
     public decimal ValorTotal { get; set; }
 
+    public decimal ValorDesconto { get; set; }
+
     public StatusPedido Status { get; set; }
 
     public Guid ClienteId { get; set; }
@@ -30,5 +32,17 @@ public class Pedido : EntidadeBase
         ClienteId = clienteId;
         CodigoPromocionalId = codigoPromocionalId;
         Status = StatusPedido.Em_andamento;
+    }
+
+    public void AdicionarItem(ItemPedido item)
+    {
+        Itens.Add(item);
+    }
+
+    public void CalcularTotal(decimal percentualDesconto = 0)
+    {
+        var subtotal = Itens.Sum(i => i.ValorTotal);
+        ValorDesconto = Math.Round(subtotal * percentualDesconto / 100m, 2);
+        ValorTotal = subtotal - ValorDesconto;
     }
 }

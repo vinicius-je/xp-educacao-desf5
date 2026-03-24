@@ -14,6 +14,7 @@ public class PedidoConfiguration : IEntityTypeConfiguration<Pedido>
 
         builder.Property(p => p.DataPedido);
         builder.Property(p => p.ValorTotal).HasPrecision(18, 2);
+        builder.Property(p => p.ValorDesconto).HasPrecision(18, 2);
         builder.Property(p => p.Status).IsRequired();
 
         builder.HasMany(p => p.Itens)
