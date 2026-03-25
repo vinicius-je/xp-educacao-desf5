@@ -10,6 +10,7 @@ import { PedidoResponse, STATUS_PEDIDO_LABELS } from '../../core/models/pedido.m
   selector: 'app-pedido-detalhe',
   imports: [Card, Tag, Button],
   templateUrl: './pedido-detalhe.component.html',
+  styleUrl: './pedido-detalhe.component.css',
 })
 export class PedidoDetalheComponent implements OnInit {
   pedido = signal<PedidoResponse | null>(null);

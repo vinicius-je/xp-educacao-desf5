@@ -1,3 +1,4 @@
+using AutoMapper;
 using PitLaneShop.Model.Repositories;
 using PitLaneShop.Services.Abstractions;
 using PitLaneShop.Services.Features.Cliente.Dtos;
@@ -11,8 +12,8 @@ public class ClienteService
 {
     private readonly IClienteRepository _clienteRepository;
 
-    public ClienteService(IClienteRepository repository, IUnitOfWork unitOfWork)
-        : base(repository, unitOfWork)
+    public ClienteService(IClienteRepository repository, IUnitOfWork unitOfWork, IMapper mapper)
+        : base(repository, unitOfWork, mapper)
     {
         _clienteRepository = repository;
     }
@@ -21,24 +22,6 @@ public class ClienteService
         string email, CancellationToken cancellationToken = default)
     {
         var entity = await _clienteRepository.GetByEmailAsync(email, cancellationToken);
-        return entity is null ? null : MapToResponse(entity);
-    }
-
-    protected override ClienteResponseDto MapToResponse(ClienteEntity entity) => new()
-    {
-        Id = entity.Id,
-        Nome = entity.Nome,
-        Email = entity.Email,
-        Telefone = entity.Telefone
-    };
-
-    protected override ClienteEntity MapFromCreate(CreateClienteDto dto) =>
-        new(dto.Nome, dto.Email, dto.Telefone);
-
-    protected override void ApplyUpdate(ClienteEntity entity, UpdateClienteDto dto)
-    {
-        entity.Nome = dto.Nome;
-        entity.Email = dto.Email;
-        entity.Telefone = dto.Telefone;
+        return entity is null ? null : Mapper.Map<ClienteResponseDto>(entity);
     }
 }

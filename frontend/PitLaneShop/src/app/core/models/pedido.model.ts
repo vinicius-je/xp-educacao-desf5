@@ -13,6 +13,7 @@ export interface ItemPedidoResponse {
   id: string;
   produtoId: string;
   descricao: string;
+  imagem: string;
   valorUnitario: number;
   quantidade: number;
   valorTotal: number;

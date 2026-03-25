@@ -44,14 +44,27 @@
           <p class="text-sm font-semibold text-text-muted uppercase tracking-wide m-0 mb-4">Itens do Pedido</p>
           <div class="flex flex-col gap-3">
             @for (item of pedido()!.itens; track item.id) {
-              <div class="flex items-center justify-between py-3 px-4 bg-surface rounded-xl">
-                <div class="flex-1 min-w-0">
+              <div class="item-row">
+                <div class="item-image-container">
+                  @if (item.imagem) {
+                    <img
+                      [src]="item.imagem"
+                      [alt]="item.descricao"
+                      class="item-image"
+                    />
+                  } @else {
+                    <div class="item-image-placeholder">
+                      <i class="pi pi-box"></i>
+                    </div>
+                  }
+                </div>
+                <div class="item-details">
                   <p class="text-sm font-semibold text-text m-0 truncate">{{ item.descricao }}</p>
                   <p class="text-xs text-text-muted m-0 mt-0.5">
                     {{ item.quantidade }}x {{ formatCurrency(item.valorUnitario) }}
                   </p>
                 </div>
-                <span class="text-sm font-bold text-text whitespace-nowrap ml-4">
+                <span class="item-total">
                   {{ formatCurrency(item.valorTotal) }}
                 </span>
               </div>

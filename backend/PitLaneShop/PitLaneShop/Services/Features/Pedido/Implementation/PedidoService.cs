@@ -1,3 +1,4 @@
+using AutoMapper;
 using PitLaneShop.Model.Entities;
 using PitLaneShop.Model.Repositories;
 using PitLaneShop.Services.Abstractions;
@@ -16,9 +17,10 @@ public class PedidoService
     public PedidoService(
         IPedidoRepository repository,
         IUnitOfWork unitOfWork,
+        IMapper mapper,
         IProdutoRepository produtoRepository,
         ICodigoPromocionalRepository codigoPromocionalRepository)
-        : base(repository, unitOfWork)
+        : base(repository, unitOfWork, mapper)
     {
         _produtoRepository = produtoRepository;
         _codigoPromocionalRepository = codigoPromocionalRepository;
@@ -37,7 +39,24 @@ public class PedidoService
         await Repository.AddAsync(pedido, cancellationToken);
         await UnitOfWork.SaveAsync(cancellationToken);
 
-        return MapToResponse(pedido);
+        return Mapper.Map<PedidoResponseDto>(pedido);
+    }
+
+    public override async Task<PedidoResponseDto?> UpdateAsync(
+        Guid id,
+        UpdatePedidoDto dto,
+        CancellationToken cancellationToken = default)
+    {
+        var entity = await Repository.GetByIdAsync(id, cancellationToken);
+        if (entity is null)
+            return null;
+
+        entity.Status = dto.Status;
+        entity.CodigoPromocionalId = dto.CodigoPromocionalId;
+
+        await Repository.UpdateAsync(entity, cancellationToken);
+        await UnitOfWork.SaveAsync(cancellationToken);
+        return Mapper.Map<PedidoResponseDto>(entity);
     }
 
     private async Task<decimal> VerificarDesconto(CreatePedidoDto dto, CancellationToken cancellationToken)
@@ -70,34 +89,5 @@ public class PedidoService
             var item = new ItemPedido(produto.Preco, itemDto.Quantidade, produto.Nome, pedido.Id, produto.Id);
             pedido.AdicionarItem(item);
         }
-    }
-
-    protected override PedidoResponseDto MapToResponse(PedidoEntity entity) => new()
-    {
-        Id = entity.Id,
-        DataPedido = entity.DataPedido,
-        ValorTotal = entity.ValorTotal,
-        ValorDesconto = entity.ValorDesconto,
-        Status = entity.Status,
-        ClienteId = entity.ClienteId,
-        CodigoPromocionalId = entity.CodigoPromocionalId,
-        Itens = entity.Itens.Select(i => new ItemPedidoResponseDto
-        {
-            Id = i.Id,
-            ProdutoId = i.ProdutoId,
-            Descricao = i.Descricao,
-            ValorUnitario = i.ValorUnitario,
-            Quantidade = i.Quantidade,
-            ValorTotal = i.ValorTotal
-        }).ToList()
-    };
-
-    protected override PedidoEntity MapFromCreate(CreatePedidoDto dto) =>
-        new(DateOnly.FromDateTime(DateTime.UtcNow), dto.ClienteId, dto.CodigoPromocionalId);
-
-    protected override void ApplyUpdate(PedidoEntity entity, UpdatePedidoDto dto)
-    {
-        entity.Status = dto.Status;
-        entity.CodigoPromocionalId = dto.CodigoPromocionalId;
     }
 }

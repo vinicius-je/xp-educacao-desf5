@@ -1,3 +1,4 @@
+using AutoMapper;
 using PitLaneShop.Model.Entities;
 using PitLaneShop.Model.Repositories;
 
@@ -10,31 +11,33 @@ public abstract class BaseCrudService<TEntity, TResponseDto, TCreateDto, TUpdate
 {
     protected readonly IBaseRepository<TEntity> Repository;
     protected readonly IUnitOfWork UnitOfWork;
+    protected readonly IMapper Mapper;
 
-    protected BaseCrudService(IBaseRepository<TEntity> repository, IUnitOfWork unitOfWork)
+    protected BaseCrudService(IBaseRepository<TEntity> repository, IUnitOfWork unitOfWork, IMapper mapper)
     {
         Repository = repository;
         UnitOfWork = unitOfWork;
+        Mapper = mapper;
     }
 
     public virtual async Task<TResponseDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var entity = await Repository.GetByIdAsync(id, cancellationToken);
-        return entity is null ? null : MapToResponse(entity);
+        return entity is null ? null : Mapper.Map<TResponseDto>(entity);
     }
 
     public virtual async Task<List<TResponseDto>> GetAllAsync(CancellationToken cancellationToken = default)
     {
         var list = await Repository.GetAllAsync(cancellationToken);
-        return list.Select(MapToResponse).ToList();
+        return list.Select(Mapper.Map<TResponseDto>).ToList();
     }
 
     public virtual async Task<TResponseDto> CreateAsync(TCreateDto dto, CancellationToken cancellationToken = default)
     {
-        var entity = MapFromCreate(dto);
+        var entity = Mapper.Map<TEntity>(dto);
         var created = await Repository.AddAsync(entity, cancellationToken);
         await UnitOfWork.SaveAsync(cancellationToken);
-        return MapToResponse(created);
+        return Mapper.Map<TResponseDto>(created);
     }
 
     public virtual async Task<TResponseDto?> UpdateAsync(Guid id, TUpdateDto dto, CancellationToken cancellationToken = default)
@@ -43,10 +46,10 @@ public abstract class BaseCrudService<TEntity, TResponseDto, TCreateDto, TUpdate
         if (entity is null)
             return null;
 
-        ApplyUpdate(entity, dto);
+        Mapper.Map(dto, entity);
         await Repository.UpdateAsync(entity, cancellationToken);
         await UnitOfWork.SaveAsync(cancellationToken);
-        return MapToResponse(entity);
+        return Mapper.Map<TResponseDto>(entity);
     }
 
     public virtual async Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
@@ -59,10 +62,4 @@ public abstract class BaseCrudService<TEntity, TResponseDto, TCreateDto, TUpdate
 
     public virtual Task<int> CountAsync(CancellationToken cancellationToken = default)
         => Repository.CountAsync(cancellationToken);
-
-    protected abstract TResponseDto MapToResponse(TEntity entity);
-
-    protected abstract TEntity MapFromCreate(TCreateDto dto);
-
-    protected abstract void ApplyUpdate(TEntity entity, TUpdateDto dto);
 }
