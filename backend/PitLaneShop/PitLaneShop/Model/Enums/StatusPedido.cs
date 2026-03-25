@@ -2,9 +2,9 @@ namespace PitLaneShop.Model.Enums;
 
 public enum StatusPedido
 {
-    Em_andamento = 0,
-    Pago = 1,
-    Cancelado = 2,
-    Em_rota = 3,
-    Entregue = 4
+    EM_ANDAMENTO = 0,
+    PAGO = 1,
+    CANCELADO = 2,
+    EM_ROTA = 3,
+    ENTREGUE = 4
 }

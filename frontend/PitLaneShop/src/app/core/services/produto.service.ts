@@ -6,6 +6,7 @@ import { ProdutoResponse } from '../models/produto.model';
 export class ProdutoService {
   async getAll(): Promise<ProdutoResponse[]> {
     const response = await api.get<ProdutoResponse[]>('/produtos');
+    console.log(response)
     return response.data;
   }
 

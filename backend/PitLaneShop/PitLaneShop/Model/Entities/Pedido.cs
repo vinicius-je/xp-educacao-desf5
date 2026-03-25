@@ -31,7 +31,7 @@ public class Pedido : EntidadeBase
         DataPedido = dataPedido;
         ClienteId = clienteId;
         CodigoPromocionalId = codigoPromocionalId;
-        Status = StatusPedido.Em_andamento;
+        Status = StatusPedido.EM_ANDAMENTO;
     }
 
     public void AdicionarItem(ItemPedido item)
