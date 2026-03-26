@@ -1,0 +1,115 @@
+<nav class="bg-white shadow-sm sticky top-0 z-10">
+  <div class="max-w-[800px] mx-auto px-6 flex items-center justify-between h-16">
+    <span class="text-xl font-bold text-brand tracking-tight">🏁 PitLaneShop - Checkout</span>
+  </div>
+</nav>
+
+<main class="max-w-[800px] mx-auto px-6 py-10">
+  <div class="flex items-center gap-3 mb-8">
+    <button
+      class="text-brand hover:text-brand-dark cursor-pointer bg-transparent border-none text-sm font-semibold flex items-center gap-1"
+      (click)="voltar()"
+    >
+      ← Voltar para a loja
+    </button>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <!-- Lista de Produtos -->
+    <div class="md:col-span-2">
+      <p-card styleClass="rounded-2xl shadow-sm h-full">
+        <h2 class="text-xl font-bold text-text mb-4 mt-0">Resumo do Carrinho</h2>
+        
+        <div class="flex flex-col gap-4">
+          @for (item of cart.items(); track item.produto.id) {
+            <div class="flex gap-4 p-3 bg-surface rounded-xl border border-black/5">
+              @if (item.produto.imagem) {
+                <img [src]="item.produto.imagem" [alt]="item.produto.nome" class="w-16 h-16 object-contain rounded-lg bg-white border border-black/5" />
+              } @else {
+                <div class="w-16 h-16 rounded-lg bg-black/5 flex items-center justify-center">
+                  <i class="pi pi-box text-text-muted"></i>
+                </div>
+              }
+              <div class="flex-1">
+                <p class="font-semibold text-text m-0">{{ item.produto.nome }}</p>
+                <p class="text-sm text-text-muted m-0">Qtd: {{ item.quantidade }}</p>
+              </div>
+              <div class="text-right">
+                <p class="font-bold text-text m-0">{{ formatCurrency(item.produto.preco * item.quantidade) }}</p>
+                <p class="text-xs text-text-muted m-0">{{ formatCurrency(item.produto.preco) }} un</p>
+              </div>
+            </div>
+          }
+        </div>
+      </p-card>
+    </div>
+
+    <!-- Resumo de Valores e Cupom -->
+    <div class="md:col-span-1">
+      <p-card styleClass="rounded-2xl shadow-sm sticky top-24">
+        <h3 class="text-lg font-bold text-text mt-0 mb-4">Pagamento</h3>
+
+        <!-- Área de cupom -->
+        <div class="mb-6 pb-6 border-b border-black/10">
+          <label class="block text-sm font-semibold text-text mb-2">Cupom de Desconto</label>
+          <div class="flex gap-2">
+            <input 
+              pInputText 
+              type="text" 
+              class="w-full text-sm" 
+              placeholder="Digite o código" 
+              [ngModel]="codigoInput()"
+              (ngModelChange)="codigoInput.set($event)"
+              [disabled]="cupomAplicado() !== null"
+            />
+            @if (cupomAplicado() !== null) {
+              <p-button icon="pi pi-times" severity="danger" (onClick)="cupomAplicado.set(null); codigoInput.set('')"></p-button>
+            } @else {
+              <p-button icon="pi pi-check" (onClick)="aplicarCupom()"></p-button>
+            }
+          </div>
+          @if (cupomErro()) {
+            <p class="text-danger text-xs mt-2 m-0">{{ cupomErro() }}</p>
+          }
+          @if (cupomAplicado() !== null) {
+            <p class="text-success text-xs mt-2 m-0 font-semibold gap-1 flex items-center">
+              <i class="pi pi-check-circle"></i> Cupom aplicado com sucesso!
+            </p>
+          }
+        </div>
+
+        <!-- Resumo -->
+        <div class="flex flex-col gap-3 mb-6">
+          <div class="flex justify-between items-center text-text">
+            <span>Subtotal</span>
+            <span class="font-semibold">{{ formatCurrency(cart.totalValor()) }}</span>
+          </div>
+
+          @if (cupomAplicado() !== null) {
+            <div class="flex justify-between items-center text-success">
+              <span>Desconto</span>
+              <span class="font-semibold">- {{ formatCurrency(valorDesconto) }}</span>
+            </div>
+          }
+
+          <div class="flex justify-between items-center text-text text-xl font-bold pt-3 border-t border-black/10 mt-2">
+            <span>Total</span>
+            <span class="text-brand">{{ formatCurrency(totalFinal) }}</span>
+          </div>
+        </div>
+
+        @if (erroPedido()) {
+          <p class="text-danger text-sm text-center mb-3">{{ erroPedido() }}</p>
+        }
+
+        <p-button 
+          label="Finalizar Compra" 
+          styleClass="w-full" 
+          [loading]="finalizando()"
+          [disabled]="cart.items().length === 0"
+          (onClick)="finalizarPedido()"
+        />
+      </p-card>
+    </div>
+  </div>
+</main>

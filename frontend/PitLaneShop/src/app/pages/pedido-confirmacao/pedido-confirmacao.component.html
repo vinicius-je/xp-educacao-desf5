@@ -1,0 +1,54 @@
+@if (loading()) {
+  <div class="flex items-center justify-center min-h-dvh text-text-muted text-lg">
+    <p>Carregando as informações do pedido...</p>
+  </div>
+} @else if (error()) {
+  <div class="flex flex-col items-center justify-center min-h-dvh gap-4">
+    <p class="text-danger text-lg">{{ error() }}</p>
+    <p-button label="Voltar para a Loja" icon="pi pi-home" (onClick)="voltarParaLoja()" />
+  </div>
+} @else {
+  <nav class="bg-white shadow-sm sticky top-0 z-10">
+    <div class="max-w-[800px] mx-auto px-6 flex items-center justify-between h-16">
+      <span class="text-xl font-bold text-brand tracking-tight">🏁 PitLaneShop</span>
+    </div>
+  </nav>
+
+  <main class="max-w-[800px] mx-auto px-6 py-10">
+    <p-card styleClass="rounded-2xl shadow-sm text-center py-6">
+      <div class="flex flex-col items-center gap-4">
+        <div class="w-16 h-16 bg-success/20 rounded-full flex items-center justify-center text-success text-3xl mb-2">
+          <i class="pi pi-check" style="font-size: 2rem"></i>
+        </div>
+        <h2 class="text-2xl font-bold text-text m-0">Pedido Confirmado!</h2>
+        <p class="text-text-muted m-0">Obrigado pela sua compra. Seu pedido <span class="font-bold text-text">{{ pedido()?.id }}</span> foi realizado com sucesso.</p>
+        
+        <div class="w-full max-w-[400px] bg-surface border border-black/5 rounded-xl p-4 mt-4 mb-6 text-left">
+          <h3 class="text-sm font-bold text-text m-0 mb-3 border-b border-black/5 pb-2">Resumo da Compra</h3>
+          
+          <div class="flex justify-between items-center text-sm text-text-muted mb-2">
+            <span>Subtotal:</span>
+            <span>{{ formatCurrency(pedido()!.valorTotal + pedido()!.valorDesconto) }}</span>
+          </div>
+
+          @if (pedido()!.valorDesconto > 0) {
+            <div class="flex justify-between items-center text-sm text-success font-semibold mb-2">
+              <span>Desconto (Cupom):</span>
+              <span>- {{ formatCurrency(pedido()!.valorDesconto) }}</span>
+            </div>
+          }
+
+          <div class="flex justify-between items-center text-base font-bold text-text mt-3 pt-3 border-t border-black/5">
+            <span>Total Pago:</span>
+            <span class="text-brand">{{ formatCurrency(pedido()!.valorTotal) }}</span>
+          </div>
+        </div>
+
+        <div class="flex gap-4">
+          <p-button label="Ver detalhes do pedido" icon="pi pi-file" severity="secondary" (onClick)="verDetalhes()" />
+          <p-button label="Continuar comprando" icon="pi pi-home" (onClick)="voltarParaLoja()" />
+        </div>
+      </div>
+    </p-card>
+  </main>
+}

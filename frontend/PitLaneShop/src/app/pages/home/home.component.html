@@ -154,17 +154,13 @@
 
       @if (cart.items().length > 0) {
         <div class="border-t border-black/10 px-6 py-5 flex flex-col gap-3">
-          @if (cartError()) {
-            <p class="text-danger text-sm m-0">{{ cartError() }}</p>
-          }
           <div class="flex items-center justify-between">
             <span class="text-sm text-text-muted">{{ cart.totalItens() }} {{ cart.totalItens() === 1 ? 'item' : 'itens' }}</span>
             <span class="text-xl font-bold text-text">{{ formatCurrency(cart.totalValor()) }}</span>
           </div>
           <p-button
-            label="Finalizar Pedido"
-            icon="pi pi-check"
-            [loading]="finalizando()"
+            label="Ir para Checkout"
+            icon="pi pi-arrow-right"
             styleClass="w-full"
             (onClick)="finalizarPedido()"
           />

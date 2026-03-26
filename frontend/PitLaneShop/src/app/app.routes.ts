@@ -18,5 +18,17 @@ export const routes: Routes = [
         (m) => m.PedidoDetalheComponent,
       ),
   },
+  {
+    path: 'checkout/:id',
+    loadComponent: () =>
+      import('./pages/checkout/checkout.component').then((m) => m.CheckoutComponent),
+  },
+  {
+    path: 'pedido-confirmacao/:id',
+    loadComponent: () =>
+      import('./pages/pedido-confirmacao/pedido-confirmacao.component').then(
+        (m) => m.PedidoConfirmacaoComponent,
+      ),
+  },
   { path: '**', redirectTo: '' },
 ];

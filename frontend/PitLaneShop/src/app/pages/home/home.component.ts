@@ -8,7 +8,6 @@ import { Button } from 'primeng/button';
 import { Badge } from 'primeng/badge';
 import { ClienteService } from '../../core/services/cliente.service';
 import { ProdutoService } from '../../core/services/produto.service';
-import { PedidoService } from '../../core/services/pedido.service';
 import { CartService } from '../../core/services/cart.service';
 import { ClienteResponse } from '../../core/models/cliente.model';
 import { ProdutoResponse, CATEGORIA_LABELS } from '../../core/models/produto.model';
@@ -24,8 +23,6 @@ export class HomeComponent implements OnInit {
   loading = signal(true);
   filtro = signal('');
   cartOpen = signal(false);
-  finalizando = signal(false);
-  cartError = signal('');
 
   private allProdutos: ProdutoResponse[] = [];
 
@@ -34,7 +31,6 @@ export class HomeComponent implements OnInit {
     private router: Router,
     private clienteService: ClienteService,
     private produtoService: ProdutoService,
-    private pedidoService: PedidoService,
     public cart: CartService,
   ) {}
 
@@ -85,25 +81,8 @@ export class HomeComponent implements OnInit {
     const cliente = this.cliente();
     if (!cliente || this.cart.items().length === 0) return;
 
-    this.finalizando.set(true);
-    this.cartError.set('');
-
-    try {
-      const pedido = await this.pedidoService.create({
-        clienteId: cliente.id,
-        itens: this.cart.items().map((i) => ({
-          produtoId: i.produto.id,
-          quantidade: i.quantidade,
-        })),
-      });
-      this.cart.clear();
-      this.cartOpen.set(false);
-      await this.router.navigate(['/pedido', pedido.id]);
-    } catch {
-      this.cartError.set('Erro ao finalizar pedido. Tente novamente.');
-    } finally {
-      this.finalizando.set(false);
-    }
+    this.cartOpen.set(false);
+    await this.router.navigate(['/checkout', cliente.id]);
   }
 
   categoriaLabel(cat: number): string {
