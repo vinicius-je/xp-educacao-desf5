@@ -12,13 +12,13 @@ import { CodigoPromocionalResponse } from '../../core/models/codigo-promocional.
 
 @Component({
   selector: 'app-checkout',
-  imports: [FormsModule, Card, Button, InputText, Message],
+  imports: [FormsModule, Card, Button, InputText],
   templateUrl: './checkout.component.html',
   styleUrl: './checkout.component.css',
 })
 export class CheckoutComponent implements OnInit {
   clienteId = signal<string | null>(null);
-  
+
   codigoInput = signal('');
   cupomAplicado = signal<CodigoPromocionalResponse | null>(null);
   cupomErro = signal('');
@@ -32,14 +32,14 @@ export class CheckoutComponent implements OnInit {
     public cart: CartService,
     private pedidoService: PedidoService,
     private promoService: CodigoPromocionalService,
-  ) {}
+  ) { }
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.clienteId.set(id);
     }
-    
+
     // Se carrinho vazio, volta para home
     if (this.cart.items().length === 0 && id) {
       this.router.navigate(['/home', id]);
@@ -49,7 +49,7 @@ export class CheckoutComponent implements OnInit {
   async aplicarCupom() {
     this.cupomErro.set('');
     this.cupomAplicado.set(null);
-    
+
     const codigo = this.codigoInput().trim();
     if (!codigo) return;
 
