@@ -30,5 +30,12 @@ export const routes: Routes = [
         (m) => m.PedidoConfirmacaoComponent,
       ),
   },
+  {
+    path: 'perfil/:id',
+    loadComponent: () =>
+      import('./pages/perfil/perfil.component').then(
+        (m) => m.PerfilComponent,
+      ),
+  },
   { path: '**', redirectTo: '' },
 ];

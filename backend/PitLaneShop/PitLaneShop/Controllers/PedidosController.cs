@@ -26,6 +26,16 @@ public class PedidosController : ControllerBase
         return Ok(itens);
     }
 
+    [HttpGet("cliente/{clienteId:guid}", Name = nameof(ListarPedidosPorClienteAsync))]
+    [ProducesResponseType(typeof(IEnumerable<PedidoResponseDto>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<IEnumerable<PedidoResponseDto>>> ListarPedidosPorClienteAsync(
+        Guid clienteId,
+        CancellationToken cancellationToken)
+    {
+        var itens = await _pedidoService.GetPedidosPorClienteIdAsync(clienteId, cancellationToken);
+        return Ok(itens);
+    }
+
     [HttpGet("{id:guid}", Name = nameof(BuscarPedidoPorIdAsync))]
     [ProducesResponseType(typeof(PedidoResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

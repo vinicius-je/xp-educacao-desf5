@@ -8,6 +8,16 @@
       <span class="text-xl font-bold text-brand tracking-tight">🏁 PitLaneShop</span>
       <div class="flex items-center gap-4">
         <span class="hidden sm:inline text-sm text-text-muted">Olá, <span class="font-semibold text-text text-sm">{{ cliente()?.nome }}</span></span>
+        
+        <a
+          [routerLink]="['/perfil', cliente()?.id]"
+          class="flex items-center gap-1.5 px-3 py-2 rounded-lg text-text-muted hover:bg-black/5 hover:text-text transition-colors cursor-pointer no-underline"
+          title="Meu Perfil"
+        >
+          <span class="material-symbols-outlined text-xl">account_circle</span>
+          <span class="hidden sm:inline text-sm font-semibold">Perfil</span>
+        </a>
+
         <button
           class="relative flex items-center gap-1.5 px-3 py-2 rounded-lg bg-brand/10 text-brand font-semibold text-sm hover:bg-brand/20 transition-colors cursor-pointer border-none"
           (click)="toggleCart()"

@@ -13,4 +13,9 @@ export class PedidoService {
     const response = await api.get<PedidoResponse>(`/pedidos/${id}`);
     return response.data;
   }
+
+  async getByClienteId(clienteId: string): Promise<PedidoResponse[]> {
+    const response = await api.get<PedidoResponse[]>(`/pedidos/cliente/${clienteId}`);
+    return response.data;
+  }
 }

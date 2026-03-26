@@ -1,0 +1,113 @@
+@if (loading()) {
+  <div class="flex items-center justify-center min-h-dvh">
+    <span class="material-symbols-outlined animate-spin text-brand text-4xl">autorenew</span>
+  </div>
+} @else if (error()) {
+  <div class="flex flex-col items-center justify-center min-h-dvh gap-4">
+    <p class="text-danger text-lg">{{ error() }}</p>
+    <p-button (onClick)="voltarHome()">
+      <span class="material-symbols-outlined mr-2">arrow_back</span> Voltar para a Loja
+    </p-button>
+  </div>
+} @else {
+  <nav class="bg-white shadow-sm sticky top-0 z-10">
+    <div class="max-w-[1200px] mx-auto px-6 flex items-center justify-between h-16">
+      <span class="text-xl font-bold text-brand tracking-tight">🏁 PitLaneShop - Meu Perfil</span>
+      <button class="text-text hover:text-brand cursor-pointer bg-transparent border-none font-semibold flex items-center gap-1" (onClick)="voltarHome()">
+        <span class="material-symbols-outlined text-xl">home</span> Início
+      </button>
+    </div>
+  </nav>
+
+  <main class="max-w-[800px] mx-auto px-6 py-10">
+    
+    <!-- Dados do Cliente -->
+    <p-card styleClass="mb-8 rounded-2xl shadow-sm">
+      <ng-template pTemplate="title">
+        <div class="flex items-center gap-2 text-text mb-2">
+          <span class="material-symbols-outlined text-brand" style="font-size: 2rem;">account_circle</span>
+          <h2 class="m-0">Dados Pessoais</h2>
+        </div>
+      </ng-template>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="text-xs text-text-muted font-bold tracking-wider uppercase">Nome</label>
+          <p class="font-medium text-text m-0">{{ cliente()?.nome }}</p>
+        </div>
+        <div>
+          <label class="text-xs text-text-muted font-bold tracking-wider uppercase">Telefone</label>
+          <p class="font-medium text-text m-0">{{ cliente()?.telefone }}</p>
+        </div>
+        <div class="md:col-span-2">
+          <label class="text-xs text-text-muted font-bold tracking-wider uppercase">E-mail</label>
+          <p class="font-medium text-text m-0">{{ cliente()?.email }}</p>
+        </div>
+      </div>
+    </p-card>
+
+    <h3 class="text-2xl font-bold text-text mb-6">Histórico de Pedidos</h3>
+
+    @if (pedidos().length === 0) {
+      <div class="bg-white p-8 rounded-2xl shadow-sm text-center border overflow-hidden">
+        <span class="material-symbols-outlined text-4xl text-text-muted mb-4">shopping_bag</span>
+        <h3 class="text-lg font-bold text-text mb-2">Você ainda não possui pedidos</h3>
+        <p class="text-text-muted mb-6">Que tal descobrir os produtos incríveis na nossa loja?</p>
+        <p-button (onClick)="voltarHome()">
+          <span class="material-symbols-outlined mr-2">store</span> Ver Novidades
+        </p-button>
+      </div>
+    } @else {
+      <div class="flex flex-col gap-6">
+        @for (pedido of pedidos(); track pedido.id) {
+          <p-card styleClass="rounded-2xl shadow-sm border border-black/5 overflow-hidden">
+            <div class="flex flex-col md:flex-row md:items-center justify-between border-b border-black/5 pb-4 mb-4 gap-4">
+              <div>
+                <p class="text-sm text-text-muted m-0">Pedido <strong>#{{ pedido.id.substring(0,8) }}</strong></p>
+                <div class="flex items-center gap-2 mt-1">
+                  <span class="px-2 border rounded-md text-xs font-semibold" 
+                        [class.bg-success]="pedido.status === 1 || pedido.status === 4"
+                        [class.text-white]="pedido.status === 1 || pedido.status === 4">
+                    Status: {{ pedido.status }}
+                  </span>
+                  <p class="text-xs text-text-muted m-0">Realizado em {{ pedido.dataPedido | date:'dd/MM/yyyy' }}</p>
+                </div>
+              </div>
+              <div class="text-left md:text-right">
+                <p class="text-xs text-text-muted m-0">Total</p>
+                <p class="text-xl font-bold text-brand m-0">{{ formatCurrency(pedido.valorTotal) }}</p>
+              </div>
+            </div>
+
+            <div class="flex flex-col gap-3">
+              @for (item of pedido.itens; track item.id) {
+                <div class="flex items-center gap-4 bg-black/5 p-3 rounded-xl">
+                  @if (item.imagem) {
+                    <img [src]="item.imagem" [alt]="item.descricao" class="w-16 h-16 object-contain rounded-lg bg-white border border-black/5" />
+                  } @else {
+                    <div class="item-image-placeholder">
+                      <span class="material-symbols-outlined">inventory_2</span>
+                    </div>
+                  }
+                  <div class="flex-1">
+                    <p class="font-semibold text-text m-0 leading-tight">{{ item.descricao }}</p>
+                    <p class="text-sm text-text-muted m-0 mt-1">Qtde: {{ item.quantidade }}</p>
+                  </div>
+                  <div class="text-right">
+                    <p class="font-medium text-text m-0">{{ formatCurrency(item.valorUnitario) }}</p>
+                  </div>
+                </div>
+              }
+            </div>
+            
+            @if (pedido.codigoPromocionalId) {
+              <div class="mt-4 text-sm text-success font-medium flex items-center gap-1">
+                <span class="material-symbols-outlined text-base">local_offer</span>
+                Desconto aplicado ao pedido
+              </div>
+            }
+          </p-card>
+        }
+      </div>
+    }
+  </main>
+}

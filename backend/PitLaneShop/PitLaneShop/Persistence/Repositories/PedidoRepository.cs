@@ -26,4 +26,14 @@ public class PedidoRepository : BaseRepository<Pedido>, IPedidoRepository
             .AsNoTracking()
             .ToListAsync(cancellationToken);
     }
+
+    public async Task<IEnumerable<Pedido>> GetPedidosPorClienteIdAsync(Guid clienteId, CancellationToken cancellationToken)
+    {
+        return await DbSet
+            .Where(p => p.ClienteId == clienteId)
+            .Include(p => p.Itens)
+                .ThenInclude(i => i.Produto)
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+    }
 }

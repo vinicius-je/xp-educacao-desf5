@@ -1,0 +1,17 @@
+
+:host {
+  display: block;
+  min-height: 100vh;
+  background-color: var(--color-background);
+}
+
+.item-image-placeholder {
+  width: 4rem;
+  height: 4rem;
+  background-color: rgba(0,0,0,0.05);
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+}

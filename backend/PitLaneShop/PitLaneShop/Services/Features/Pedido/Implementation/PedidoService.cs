@@ -59,6 +59,12 @@ public class PedidoService
         return Mapper.Map<PedidoResponseDto>(entity);
     }
 
+    public async Task<IEnumerable<PedidoResponseDto>> GetPedidosPorClienteIdAsync(Guid clienteId, CancellationToken cancellationToken)
+    {
+        var pedidos = await ((IPedidoRepository)Repository).GetPedidosPorClienteIdAsync(clienteId, cancellationToken);
+        return Mapper.Map<IEnumerable<PedidoResponseDto>>(pedidos);
+    }
+
     private async Task<decimal> VerificarDesconto(CreatePedidoDto dto, CancellationToken cancellationToken)
     {
         decimal percentualDesconto = 0;

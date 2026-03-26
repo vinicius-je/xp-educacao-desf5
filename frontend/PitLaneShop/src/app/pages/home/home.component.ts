@@ -1,6 +1,6 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Card } from 'primeng/card';
 import { Tag } from 'primeng/tag';
 import { InputText } from 'primeng/inputtext';
@@ -14,7 +14,7 @@ import { ProdutoResponse, CATEGORIA_LABELS } from '../../core/models/produto.mod
 
 @Component({
   selector: 'app-home',
-  imports: [FormsModule, Card, Tag, InputText, Button, Badge],
+  imports: [FormsModule, RouterModule, Card, Tag, InputText, Button, Badge],
   templateUrl: './home.component.html',
 })
 export class HomeComponent implements OnInit {
