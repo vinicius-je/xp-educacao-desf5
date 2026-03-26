@@ -72,7 +72,8 @@ export class CheckoutComponent implements OnInit {
   get valorDesconto() {
     const cupom = this.cupomAplicado();
     if (!cupom) return 0;
-    return cupom.desconto; // Valor fixo assumido aqui base na API (pode ser porcentagem no seu sistema, ajusto se for o caso)
+    const subtotal = this.cart.totalValor();
+    return (subtotal * cupom.desconto) / 100;
   }
 
   get totalFinal() {
