@@ -4,8 +4,9 @@ import { ProdutoResponse } from '../models/produto.model';
 
 @Injectable({ providedIn: 'root' })
 export class ProdutoService {
-  async getAll(): Promise<ProdutoResponse[]> {
-    const response = await api.get<ProdutoResponse[]>('/produtos');
+  async getAll(nome?: string): Promise<ProdutoResponse[]> {
+    const params = nome ? { nome } : {};
+    const response = await api.get<ProdutoResponse[]>('/produtos', { params });
     console.log(response)
     return response.data;
   }

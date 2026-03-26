@@ -24,7 +24,7 @@ export class HomeComponent implements OnInit {
   filtro = signal('');
   cartOpen = signal(false);
 
-  private allProdutos: ProdutoResponse[] = [];
+  private searchTimeout: any;
 
   constructor(
     private route: ActivatedRoute,
@@ -44,7 +44,6 @@ export class HomeComponent implements OnInit {
         this.produtoService.getAll(),
       ]);
       this.cliente.set(cliente);
-      this.allProdutos = produtos;
       this.produtos.set(produtos);
     } finally {
       this.loading.set(false);
@@ -53,19 +52,16 @@ export class HomeComponent implements OnInit {
 
   onFiltroChange(value: string) {
     this.filtro.set(value);
-    const termo = value.trim().toLowerCase();
-    if (!termo) {
-      this.produtos.set(this.allProdutos);
-      return;
+    
+    if (this.searchTimeout) {
+      clearTimeout(this.searchTimeout);
     }
-    this.produtos.set(
-      this.allProdutos.filter(
-        (p) =>
-          p.nome.toLowerCase().includes(termo) ||
-          p.descricao.toLowerCase().includes(termo) ||
-          this.categoriaLabel(p.categoria).toLowerCase().includes(termo),
-      ),
-    );
+
+    this.searchTimeout = setTimeout(async () => {
+      const termo = value.trim();
+      const produtos = await this.produtoService.getAll(termo);
+      this.produtos.set(produtos);
+    }, 400); // 400ms debounce
   }
 
   addToCart(produto: ProdutoResponse) {
