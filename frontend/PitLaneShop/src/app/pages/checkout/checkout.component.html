@@ -1,10 +1,10 @@
 <nav class="bg-white shadow-sm sticky top-0 z-10">
-  <div class="max-w-[800px] mx-auto px-6 flex items-center justify-between h-16">
+  <div class="max-w-[1200px] mx-auto px-6 flex items-center justify-between h-16">
     <span class="text-xl font-bold text-brand tracking-tight">🏁 PitLaneShop - Checkout</span>
   </div>
 </nav>
 
-<main class="max-w-[800px] mx-auto px-6 py-10">
+<main class="max-w-[1200px] mx-auto px-6 py-10">
   <div class="flex items-center gap-3 mb-8">
     <button
       class="text-brand hover:text-brand-dark cursor-pointer bg-transparent border-none text-sm font-semibold flex items-center gap-1"
@@ -27,7 +27,7 @@
                 <img [src]="item.produto.imagem" [alt]="item.produto.nome" class="w-16 h-16 object-contain rounded-lg bg-white border border-black/5" />
               } @else {
                 <div class="w-16 h-16 rounded-lg bg-black/5 flex items-center justify-center">
-                  <i class="pi pi-box text-text-muted"></i>
+                  <span class="material-symbols-outlined text-text-muted">inventory_2</span>
                 </div>
               }
               <div class="flex-1">
@@ -63,9 +63,13 @@
               [disabled]="cupomAplicado() !== null"
             />
             @if (cupomAplicado() !== null) {
-              <p-button icon="pi pi-times" severity="danger" (onClick)="cupomAplicado.set(null); codigoInput.set('')"></p-button>
+              <p-button severity="danger" (onClick)="cupomAplicado.set(null); codigoInput.set('')">
+                <span class="material-symbols-outlined">close</span>
+              </p-button>
             } @else {
-              <p-button icon="pi pi-check" (onClick)="aplicarCupom()"></p-button>
+              <p-button (onClick)="aplicarCupom()">
+                <span class="material-symbols-outlined">search</span>
+              </p-button>
             }
           </div>
           @if (cupomErro()) {
@@ -73,7 +77,7 @@
           }
           @if (cupomAplicado() !== null) {
             <p class="text-success text-xs mt-2 m-0 font-semibold gap-1 flex items-center">
-              <i class="pi pi-check-circle"></i> Cupom aplicado com sucesso!
+              <span class="material-symbols-outlined text-sm">check_circle</span> Cupom aplicado com sucesso!
             </p>
           }
         </div>

@@ -73,13 +73,13 @@
               </div>
 
               <p-button
-                label="Adicionar ao carrinho"
-                icon="pi pi-shopping-cart"
                 [disabled]="produto.quantidadeEstoque === 0"
                 styleClass="w-full"
                 size="small"
                 (onClick)="addToCart(produto)"
-              />
+              >
+                <span class="material-symbols-outlined mr-2">shopping_cart</span> Adicionar ao carrinho
+              </p-button>
             </div>
           </p-card>
         }
@@ -159,11 +159,11 @@
             <span class="text-xl font-bold text-text">{{ formatCurrency(cart.totalValor()) }}</span>
           </div>
           <p-button
-            label="Ir para Checkout"
-            icon="pi pi-arrow-right"
             styleClass="w-full"
             (onClick)="finalizarPedido()"
-          />
+          >
+            Ir para Checkout <span class="material-symbols-outlined ml-2">arrow_forward</span>
+          </p-button>
         </div>
       }
     </aside>
