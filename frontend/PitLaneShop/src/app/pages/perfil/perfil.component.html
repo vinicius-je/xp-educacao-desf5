@@ -13,7 +13,7 @@
   <nav class="bg-white shadow-sm sticky top-0 z-10">
     <div class="max-w-[1200px] mx-auto px-6 flex items-center justify-between h-16">
       <span class="text-xl font-bold text-brand tracking-tight">🏁 PitLaneShop - Meu Perfil</span>
-      <button class="text-text hover:text-brand cursor-pointer bg-transparent border-none font-semibold flex items-center gap-1" (onClick)="voltarHome()">
+      <button class="text-text hover:text-brand cursor-pointer bg-transparent border-none font-semibold flex items-center gap-1" (click)="voltarHome()">
         <span class="material-symbols-outlined text-xl">home</span> Início
       </button>
     </div>
@@ -67,14 +67,20 @@
                   <span class="px-2 border rounded-md text-xs font-semibold" 
                         [class.bg-success]="pedido.status === 1 || pedido.status === 4"
                         [class.text-white]="pedido.status === 1 || pedido.status === 4">
-                    Status: {{ pedido.status }}
+                    Status: {{ obterNomeStatus(pedido.status) }}
                   </span>
                   <p class="text-xs text-text-muted m-0">Realizado em {{ pedido.dataPedido | date:'dd/MM/yyyy' }}</p>
                 </div>
               </div>
               <div class="text-left md:text-right">
-                <p class="text-xs text-text-muted m-0">Total</p>
+                <p class="text-xs text-text-muted m-0">Valor Total</p>
                 <p class="text-xl font-bold text-brand m-0">{{ formatCurrency(pedido.valorTotal) }}</p>
+                @if (pedido.valorDesconto > 0) {
+                  <p class="text-xs text-success m-0 mt-1 flex items-center gap-1 md:justify-end">
+                    <span class="material-symbols-outlined text-sm">local_offer</span> 
+                    Desconto: -{{ formatCurrency(pedido.valorDesconto) }}
+                  </p>
+                }
               </div>
             </div>
 
@@ -98,13 +104,6 @@
                 </div>
               }
             </div>
-            
-            @if (pedido.codigoPromocionalId) {
-              <div class="mt-4 text-sm text-success font-medium flex items-center gap-1">
-                <span class="material-symbols-outlined text-base">local_offer</span>
-                Desconto aplicado ao pedido
-              </div>
-            }
           </p-card>
         }
       </div>

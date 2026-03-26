@@ -1,10 +1,10 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
 
 import { ClienteResponse } from '../../core/models/cliente.model';
-import { PedidoResponse } from '../../core/models/pedido.model';
+import { PedidoResponse, STATUS_PEDIDO_LABELS } from '../../core/models/pedido.model';
 import { ClienteService } from '../../core/services/cliente.service';
 import { PedidoService } from '../../core/services/pedido.service';
 
@@ -18,7 +18,6 @@ import { AccordionModule } from 'primeng/accordion';
   imports: [
     CommonModule,
     RouterModule,
-    CurrencyPipe,
     DatePipe,
     CardModule,
     ButtonModule,
@@ -38,7 +37,7 @@ export class PerfilComponent implements OnInit {
     private router: Router,
     private clienteService: ClienteService,
     private pedidoService: PedidoService,
-  ) {}
+  ) { }
 
   async ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
@@ -54,9 +53,9 @@ export class PerfilComponent implements OnInit {
         this.pedidoService.getByClienteId(id),
       ]);
       this.cliente.set(clienteData);
-      
+
       // Ordena por data mais recente caso nao venha ordenado da api
-      this.pedidos.set(pedidosData.sort((a, b) => 
+      this.pedidos.set(pedidosData.sort((a, b) =>
         new Date(b.dataPedido).getTime() - new Date(a.dataPedido).getTime()
       ));
     } catch (err: any) {
@@ -83,5 +82,9 @@ export class PerfilComponent implements OnInit {
       style: 'currency',
       currency: 'BRL',
     }).format(value);
+  }
+
+  obterNomeStatus(status: number): string {
+    return STATUS_PEDIDO_LABELS[status] || 'Desconhecido';
   }
 }
