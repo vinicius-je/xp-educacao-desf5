@@ -63,15 +63,24 @@ Para o desenvolvimento da SPA foram selecionadas tecnologias do ecossistema Web:
 
 ---
 
-## 4. Configuração do Projeto
+## 4. Configuração do Projeto e Execução
 
-O backend foi desenvolvido sobre um projeto do tipo ASP.NET Core Web API com suporte à orquestração de contêineres Docker. Ao iniciar, o backend cria automaticamente um banco de dados SQL Server e insere os dados iniciais necessários para a execução do sistema. Para isso, localize o arquivo `docker-compose.yml` e execute o comando:
+A aplicação completa (frontend, backend e banco de dados) foi conteinerizada e está configurada para ser orquestrada de forma simplificada utilizando o Docker. 
+
+Ao rodar o serviço unificado, o backend cria automaticamente o banco de dados SQL Server e insere os dados iniciais necessários para o funcionamento correto do sistema sem necessidade de execuções de scripts adicionais. 
+
+Para inicializar a aplicação, acesse a pasta raiz do projeto, onde encontra-se o arquivo `docker-compose.yml`, e execute o comando abaixo:
 
 ```bash
 docker-compose up
 ```
 
-O frontend foi inicializado por meio do gerenciador npm, utilizado para criar o projeto Angular 21.
+Após o download das imagens (via GitHub Container Registry) e o início de todos os contêineres, os serviços estarão disponíveis nos respectivos endereços locais:
+
+- **Frontend (Angular SPA):** rodando em http://localhost:4000
+- **Backend (API REST .NET):** rodando em http://localhost:3000
+
+*O frontend foi inicializado por meio do gerenciador npm usando Angular 21, enquanto o backend é um projeto ASP.NET Core Web API.*
 
 ---
 
