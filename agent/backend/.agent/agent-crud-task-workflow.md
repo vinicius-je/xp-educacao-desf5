@@ -1,6 +1,6 @@
 # Agent workflow — full CRUD (PitLaneShop)
 
-This document guides **AI agents** (or developers) through implementing a **complete REST CRUD** aligned with the architecture in **`docs/architecture.md`**.
+This document guides **AI agents** (or developers) through implementing a **complete REST CRUD** aligned with the architecture in **`agent/architecture.md`**.
 
 ---
 
@@ -8,13 +8,13 @@ This document guides **AI agents** (or developers) through implementing a **comp
 
 | Document | Repository path | Purpose |
 |----------|-----------------|---------|
-| **API architecture** | `docs/architecture.md` | Layers, HTTP → Controller → Service → Repository → DB flow, folder conventions, DI. |
-| **Data model (ERD + enums)** | **`docs/diagram.md`** | Entities, fields, C# types, FKs, enums, nullability. **Read before** creating or changing entities, DTOs, or EF mappings. |
+| **API architecture** | `agent/architecture.md` | Layers, HTTP → Controller → Service → Repository → DB flow, folder conventions, DI. |
+| **Data model (ERD + enums)** | **`agent/diagram.md`** | Entities, fields, C# types, FKs, enums, nullability. **Read before** creating or changing entities, DTOs, or EF mappings. |
 
 Typical paths from repo root (adjust to your clone):
 
-- Architecture: `docs/architecture.md`
-- Diagram: **`docs/diagram.md`**
+- Architecture: `agent/architecture.md`
+- Diagram: **`agent/diagram.md`**
 
 ---
 
@@ -24,8 +24,8 @@ Following this sequence avoids broken compile cycles and matches the pattern alr
 
 ### 0. Discovery
 
-1. Open **`docs/diagram.md`** and confirm whether the entity already exists, its relationships, enums, and types (`Guid`, `DateOnly`, etc.).
-2. Open **`docs/architecture.md`** to review the request flow and folder layout.
+1. Open **`agent/diagram.md`** and confirm whether the entity already exists, its relationships, enums, and types (`Guid`, `DateOnly`, etc.).
+2. Open **`agent/architecture.md`** to review the request flow and folder layout.
 3. Inspect the reference implementation:
    - `Controllers/ClientesController.cs`
    - `Services/Features/Cliente/` (`Dtos`, `Interfaces`, `Implementation`)
@@ -43,7 +43,7 @@ Replace `X` / `EntidadeX` with the resource name (e.g. `Carro`, `VeiculoModelo`)
 - New or updated enums: **`Model/Enums/`**.
 - Include a **parameterless constructor** (for EF) and, when it fits the domain, a parameterized constructor for explicit creation (as in `Cliente`).
 
-**Checklist:** fields and relationships match **`docs/diagram.md`**.
+**Checklist:** fields and relationships match **`agent/diagram.md`**.
 
 ---
 
@@ -111,17 +111,17 @@ Create **`Services/Features/{X}/`** with:
 
 - `dotnet build` on the API `.csproj`.
 - Run the API and verify verbs and status codes in **Swagger** (Development).
-- Ensure **`docs/diagram.md`** still matches the model (update the diagram if the domain changed).
+- Ensure **`agent/diagram.md`** still matches the model (update the diagram if the domain changed).
 
 ---
 
 ## One-line flow summary
 
-**`docs/diagram.md`** (domain) → **Entity + mapping + DbSet** → **Repository (interface + impl)** → **Migration** → **DTOs + Service (BaseCrudService)** → **`Program.cs`** → **REST controller** → **build + Swagger**.
+**`agent/diagram.md`** (domain) → **Entity + mapping + DbSet** → **Repository (interface + impl)** → **Migration** → **DTOs + Service (BaseCrudService)** → **`Program.cs`** → **REST controller** → **build + Swagger**.
 
 ---
 
 ## Cross-references
 
-- Full architecture: **`docs/architecture.md`**
-- ERD and enums: **`docs/diagram.md`**
+- Full architecture: **`agent/architecture.md`**
+- ERD and enums: **`agent/diagram.md`**
