@@ -227,10 +227,18 @@ Para as classes de serviço, a mesma abordagem foi aplicada, mantendo as impleme
 
 ### 8.2 Referências de Implementação
 
-- `Controller`
-- `BaseService`
-- `IBaseService`
-- `BaseRepository`
-- `IBaseRepository`
-- `BaseEntity`
-- `Produto`
+- [**Controller**](backend/PitLaneShop/PitLaneShop/Controllers): Diretório contendo os controladores da API, responsáveis por expor os endpoints e tratar as requisições HTTP (ex. herdam de `ControllerBase`).
+- [**BaseService** (`BaseCrudService`)](backend/PitLaneShop/PitLaneShop/Services/Abstractions/BaseCrudService.cs): Classe abstrata que fornece a implementação genérica das operações de CRUD, evitando a duplicação de lógica entre os serviços.
+- [**IBaseService** (`IBaseCrudService`)](backend/PitLaneShop/PitLaneShop/Services/Abstractions/IBaseCrudService.cs): Interface que define os contratos obrigatórios das operações de CRUD para as classes de serviço.
+- [**BaseRepository**](backend/PitLaneShop/PitLaneShop/Persistence/Repositories/BaseRepository.cs): Implementação de repositório genérico utilizando o Entity Framework Core com os métodos padrão para acesso aos dados.
+- [**IBaseRepository**](backend/PitLaneShop/PitLaneShop/Model/Repositories/IBaseRepository.cs): Interface que determina os contratos dos repositórios para comunicação com o banco de dados.
+- [**BaseEntity** (`EntidadeBase`)](backend/PitLaneShop/PitLaneShop/Model/Entities/EntidadeBase.cs): Classe base das entidades de domínio, encarregada de centralizar propriedades compartilhadas (ex. identificador `Id`).
+- [**Produto**](backend/PitLaneShop/PitLaneShop/Model/Entities/Produto.cs): Classe referente à entidade de domínio.
+- [**ProdutoService**](backend/PitLaneShop/PitLaneShop/Services/Features/Produto/Implementation/ProdutoService.cs): Classe de serviço contendo o fluxo de validações e regras de negócio para a entidade Produto.
+- [**ProdutoController** (`ProdutosController`)](backend/PitLaneShop/PitLaneShop/Controllers/ProdutosController.cs): Controlador que expõe os endpoints HTTP específicos da entidade Produto.
+- [**ProdutoRepository**](backend/PitLaneShop/PitLaneShop/Persistence/Repositories/ProdutoRepository.cs): Repositório concreto dedicado à persistência e consulta dos dados da entidade Produto no banco.
+
+Outros domínios seguem a mesma estrutura de implementação como por exemplo:
+- Cliente
+- Pedidos
+- CodigoPromocionais
