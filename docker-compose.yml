@@ -24,7 +24,7 @@ services:
     restart: unless-stopped
 
   frontend:
-    image: ghcr.io/vinicius-je/xp-educacao-desf5-frontend@sha256:ee0f5ecf76babeeaee42801eee177bf3c432279274b0fbe8d914a27766b1655d
+    image: ghcr.io/vinicius-je/xp-educacao-desf5-frontend@sha256:67bafba6f0fc3c77a037e560d179622c540b4fa61c6605720879f83838e17f57
     container_name: pitlaneshop-frontend
     ports:
       - '4000:4000'
