@@ -1,3 +1,3 @@
 export const environment = {
-  apiUrl: 'http://backend:3000/api',
+  apiUrl: 'http://backend:8080/api',
 };

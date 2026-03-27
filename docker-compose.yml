@@ -12,7 +12,7 @@ services:
     restart: unless-stopped
 
   backend:
-    image: ghcr.io/vinicius-je/xp-educacao-desf5@sha256:40cf8821001fd3ed9420bb82178662245f1f4a5a7cac25b84c812d8b69898892
+    image: ghcr.io/vinicius-je/xp-educacao-desf5@sha256:d5975ab728a3c3f9cdd7baeff412d0b4b15399d0b9659cdc5e8ba5559d111bbe
     container_name: pitlaneshop-backend
     depends_on:
       - sqlserver
