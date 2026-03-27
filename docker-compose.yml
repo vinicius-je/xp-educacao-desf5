@@ -12,19 +12,19 @@ services:
     restart: unless-stopped
 
   backend:
-    image: ghcr.io/vinicius-je/xp-educacao-desf5@sha256:48aed307524abb363040ebac5f74be0dd2c35812c27888b9f81c1ac18913f3cf
+    image: ghcr.io/vinicius-je/xp-educacao-desf5@sha256:40cf8821001fd3ed9420bb82178662245f1f4a5a7cac25b84c812d8b69898892
     container_name: pitlaneshop-backend
     depends_on:
       - sqlserver
     ports:
-      - '3001:8080'
-      - '3000:8081'
+      - '3000:8080'
+      - '3001:8081'
     environment:
       ConnectionStrings__DefaultConnection: "Server=sqlserver,1433;Database=PitLaneShop;User Id=sa;Password=PitLaneShop@Dev2024;TrustServerCertificate=True;MultipleActiveResultSets=true"
     restart: unless-stopped
 
   frontend:
-    image: ghcr.io/vinicius-je/xp-educacao-desf5-frontend@sha256:a86938605f0b906f67a182a6626f07fa3d9a2735219fdc5947f6e0ca4235a130
+    image: ghcr.io/vinicius-je/xp-educacao-desf5-frontend@sha256:f78816c2acc67299bd73f2aa2d5b3c42cde455e1b4d407c73d5c8c262901100d
     container_name: pitlaneshop-frontend
     ports:
       - '4000:4000'
