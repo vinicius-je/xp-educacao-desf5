@@ -1,6 +1,6 @@
 # Agent workflow — full CRUD (PitLaneShop)
 
-This document guides **AI agents** (or developers) through implementing a **complete REST CRUD** aligned with the architecture in **`agent/architecture.md`**.
+This document guides **AI agents** (or developers) through implementing a **complete REST CRUD** aligned with the backkend-architecture.md in **`agent/backkend-architecture.md.md`**.
 
 ---
 
@@ -8,12 +8,12 @@ This document guides **AI agents** (or developers) through implementing a **comp
 
 | Document | Repository path | Purpose |
 |----------|-----------------|---------|
-| **API architecture** | `agent/architecture.md` | Layers, HTTP → Controller → Service → Repository → DB flow, folder conventions, DI. |
+| **API backkend-architecture.md** | `agent/backkend-architecture.md.md` | Layers, HTTP → Controller → Service → Repository → DB flow, folder conventions, DI. |
 | **Data model (ERD + enums)** | **`agent/diagram.md`** | Entities, fields, C# types, FKs, enums, nullability. **Read before** creating or changing entities, DTOs, or EF mappings. |
 
 Typical paths from repo root (adjust to your clone):
 
-- Architecture: `agent/architecture.md`
+- backkend-architecture.md: `agent/backkend-architecture.md.md`
 - Diagram: **`agent/diagram.md`**
 
 ---
@@ -25,7 +25,7 @@ Following this sequence avoids broken compile cycles and matches the pattern alr
 ### 0. Discovery
 
 1. Open **`agent/diagram.md`** and confirm whether the entity already exists, its relationships, enums, and types (`Guid`, `DateOnly`, etc.).
-2. Open **`agent/architecture.md`** to review the request flow and folder layout.
+2. Open **`agent/backkend-architecture.md.md`** to review the request flow and folder layout.
 3. Inspect the reference implementation:
    - `Controllers/ClientesController.cs`
    - `Services/Features/Cliente/` (`Dtos`, `Interfaces`, `Implementation`)
@@ -123,5 +123,5 @@ Create **`Services/Features/{X}/`** with:
 
 ## Cross-references
 
-- Full architecture: **`agent/architecture.md`**
+- Full backkend-architecture.md: **`agent/backkend-architecture.md.md`**
 - ERD and enums: **`agent/diagram.md`**

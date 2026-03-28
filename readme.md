@@ -251,3 +251,116 @@ Outros domínios seguem a mesma estrutura de implementação como por exemplo:
 - Cliente
 - Pedidos
 - CodigoPromocionais
+
+## 9. Considerações Finais
+
+## 9.1 Considerações sobre a arquitetura
+
+A arquitetura MVC foi selecionada conforme o enunciado apresentado, a possibilidade de utilização de outras arquiteturas foi comunicada na ultima aula, porém estava à 3 dias da entrega, optei por manter a escolha original para não comprometer o prazo. Para um cenário de MVP, a arquitetura MVC estruturada em um monolito seria ideal para prototipação e validação de funcionalidades e regras de negócio. 
+
+Visando uma escala nacional ou até mesmo global seria mais adequado a separação dos de serviçoes por dominio ou até mesmo microsserviço com Clean Architecture que permite o
+isolamento e centralização da regra de negócio domínio, independência de framework como por exemplo a camada de persistência pode ser um projeto .NET separado dentro da solução, implementado seguindo os contratos definidos pelo Core (Domain) e reutilizado por diferentes APIs, substituição de tecnologia sem impacto no domínio, podemos usar como exemplo a necessidade de trocar Dapper por Entity Framework Core, ou migrar de banco relacional para NoSQL, bastando desacoplar o projeto atual e acoplar um novo que siga os contratos estabelecidos
+
+
+Isso permite que times grandes trabalhem em camadas isoladas de forma paralela, sem impactar o core do domínio, e favorece a elevação do índice de cobertura de testes — uma vez que a troca de componentes exige testes para assegurar a integridade da substituição.
+
+A dependência entre camadas segue o sentido:
+
+
+Também podemos considerar a arquitetura Hexagonal que possui os mesmos benefícios da Clean Architecture, com o diferencial de isolar ainda mais o domínio e os casos de uso. Nela o Domain e a Application formam um núcleo unificado, enquanto as camadas de infraestrutura, apresentação e demais integrações tornam-se adaptadores.
+Uma API pode ter diferentes adaptadores para interagir com:
+
+- Diferentes clientes (REST, gRPC, CLI)
+- Diferentes bancos de dados
+- Diferentes sistemas externos
+
+Para o sistema de vendas, essa arquitetura se mostrou a mais adequada, considerando a possibilidade de integração com diferentes meios de pagamento e futuras implementações, bastando definir um novo adaptador.
+
+Cada domínio pode ser estruturado como um serviço independente, onde cada serviço acessa apenas o que é pertinente ao seu próprio escopo. Quando necessário interagir com outros domínios, os domínios são:
+
+- Clientes
+- Pedidos
+- Produtos
+- Códigos promocionais
+- Pagamentos (implementação futura)
+
+Visando a comunicação entre os dominios pode ser considerado como uma opção mais adequada a necessiade do cliente a utilizando ferramentas como RabbitMQ ou Apache Kafka, onde a solicitação é enviada como mensagem e o processamento ocorre pelo domínio responsável.
+
+A abordagem por filas traz vantagens significativas em termos de experiência do usuário e uso de recursos:
+
+- Resposta imediata ao cliente — ao receber um pedido, a API retorna uma confirmação de que o pedido está sendo processado, sem bloquear o cliente enquanto a operação é concluída
+- Tolerância a processamentos complexos — pedidos com lógica elaborada ou alta carga de dados são processados em segundo plano, com notificação posterior via sistema, e-mail ou SMS
+- Liberação de recursos — a API que recebe o pedido (API A) envia a mensagem para a API de processamento (API B) e fica imediatamente disponível para atender novos clientes, sem aguardar o retorno da API B
+
+
+### 9.2. Considerações em relação ao auxilio da IA
+
+O projeto foi desenvolvido usando o Cursor com o agente Claude Opus 4.6. A base de tudo foi criar arquivos em formato markdown para guiar o agente ao longo do desenvolvimento:
+
+- [`diagrama.md`](agent/diagram.md) — representação das entidades e suas relações, usado como referência de domínio
+- Arquivos de arquitetura para backend e frontend — estrutura de pastas, tecnologias e fluxos de requisição
+- Arquivos de workflow por feature — guiam a implementação camada por camada, com padrão de nomenclatura e regras
+
+
+A implementação seguiu do Backend o [`agente-crud-task-workflow.md`](agent/backend/.agent/agent-crud-task-workflow.md), começando pelas abstrações base: `BaseEntity`, `BaseRepository` e `BaseService`. Em seguida o fluxo completo de CRUD das features foi implementado. A feature de criar pedido foi a mais complexa até o momento. Ela envolve múltiplos domínios: cliente, produto, validação de código promocional, cálculo de valores e persistência no banco como uma transação atômica. O agente usou o `SaveChanges` do EF Core inicialmente. Foi solicitada a implementação do padrão **Unit of Work** para gerenciar as transações, garantindo que todas as operações dentro do contexto da requisição sejam tratadas como uma só. Além disso, os DTOs tinham métodos internos de conversão. Foi solicitado o uso do **AutoMapper** para simplificar o mapeamento entre DTOs e entidades. Os controllers foram implementados de forma repetitiva, sem aproveitar a mesma lógica de abstração aplicada no `BaseService` e `BaseRepository`. O agente não identificou esse padrão de repetição nem sugeriu a refatoração. Isso evidencia que o desenvolvedor precisa ter conhecimento sólido em padrões de projeto, arquitetura e tecnologia para usar ferramentas de IA com eficácia, definindo regras bem estruturadas nos arquivos de guia.
+
+
+O agente optou por usar exceções nos services, o que não é ideal. A abordagem preferida é o padrão **Result**, onde um objeto de retorno encapsula:
+
+- status da operação
+- dado retornado
+- mensagens de sucesso ou erro
+
+Isso melhora o fluxo de informação entre camadas e reduz o uso de exceções, que consomem recursos significativos de memória e devem ser reservadas para casos reais de falha como erro de conexão com banco, falha em integração com serviço externo, ou indisponibilidade de um recurso essencial.
+
+Erros de validação de entrada do usuário e de regras de negócio **não devem ser tratados como exceção**.
+
+
+Para implementação do Frontend estrutura foi mantida simples:
+
+- `core/` — objetos de envio/retorno da API, services de requisição
+- `pages/` — agrupamento de HTML, CSS e lógica de tela
+
+Em alguns arquivos `.ts` dentro de `pages/`, o agente misturou chamadas de service, funções de formatação, lógica de tela e controle de estado no mesmo lugar. Como melhoria, esses arquivos seriam decompostos em objetos compostos, onde cada objeto de composição teria uma responsabilidade específica lógica de componente, lógica de tela, formatação e poderia ser reutilizado por outros objetos.
+
+Faria a separação entre:
+
+- Services de **interação com a API**
+- Services de **lógica de negócio**
+
+Por exemplo, o [`cart.service.ts`](frontend/PitLaneShop/src/app/core/services/cart.service.ts) contém lógica de estado do carrinho, mas foi colocado em `core/services`. O correto seria movê-lo para `pages/` como um objeto de composição do `home.component.ts`, já que o carrinho pertence à page home. Ainda sobre essa página o `html` poderia ter sido componentizado, especialmente a parte do carrinho. O agente não buscou aplicar essa boa prática nem sugeriu melhorias no workflow.
+
+
+Para um projeto de nível educacional, o tempo de implementação foi bem curto especialmente quando a arquitetura, o domínio, a estrutura de arquivos e as boas práticas estão bem definidos.
+
+#### Melhorias identificadas para workflows futuros
+
+Os arquivos de workflow do agente serão evoluídos para incluir:
+
+- Adição de Abstrações para os componentes que faltam como o controller
+- Estruturações de projeto do frontend
+- Regras de nomenclatura
+- Tratativa de erros padronizada (padrão Result)
+
+#### Fluxo ideal de execução
+
+1. Agente lê a feature a ser implementada
+2. Busca o arquivo de referência do workflow da task
+3. Entende o domínio e a arquitetura
+4. Segue a implementação
+5. Finaliza com testes gerados e funcionais
+
+#### Possível evolução com múltiplos agentes
+
+Dependendo da maturidade da feature, poderiam existir agentes especializados:
+
+- Um para backend
+- Um para frontend
+- Um para testes
+- Um para identificar melhorias ao longo do desenvolvimento
+
+Ficaria a cargo do desenvolvedor revisar o que foi gerado, analisar as sugestões de melhoria e decidir o que entra no primeiro ciclo de entrega ou vai para o backlog de débito técnico.
+
+#### Rastreabilidade das atividades
+
+Recomendo manter um **arquivo de histórico das atividades do agente**. Ao final de cada feature, o agente registra a tarefa e referencia os arquivos criados ou modificados. Isso facilita rastreabilidade em casos de bug, erro, melhoria ou responsabilização.
