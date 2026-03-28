@@ -1,14 +1,12 @@
 # Bootcamp: Arquiteto(a) de Software — Desafio Final
 
-
-
 ### Aluno: Vinícius de Jesus Estevam
 
 ---
 
 ## 1. Introdução
 
-A **PitLaneShop** é uma grande empresa de vendas de produtos automotivos online que necessita da implantação de uma solução para disponibilizar publicamente dados de Cliente, Produto e Pedido aos seus parceiros comerciais.
+A **PitLaneShop** é uma grande empresa de vendas de produtos automotivos online que necessita da implantação de uma solução para disponibilizar publicamente dados de Cliente, Produto e Pedido aos seus parceiros comerciais. Além das funcionalidades de CRUD solicitadas, tomei a iniciativa de expandir o escopo do projeto, incorporando os domínios de pedidos e códigos promocionais, bem como a implementação do fluxo completo de realização de compras no sistema.
 
 ---
 
@@ -103,7 +101,7 @@ backend/PitLaneShop/PitLaneShop/
 ├── Services/
 │   ├── Abstractions/     # IBaseCrudService + BaseCrudService<TEntity, …>
 │   └── Features/
-│       └── Cliente/      # DTOs, IClienteService, ClienteService
+│       └── Entity/       # DTOs, IEntityService, EntityService
 └── Program.cs            # Composição (DI), pipeline, migrações na inicialização
 ```
 
@@ -141,19 +139,21 @@ A camada de **View** foi desenvolvida como uma *Single Page Application* (SPA) e
 ```
 src/
 └── app/
-    ├── core/                # Lógica principal da aplicação e configurações
-    │   ├── api.service.ts   # Configuração da instância do Axios
-    │   ├── environment.ts   # Variáveis de ambiente
-    │   ├── models/          # Interfaces TypeScript globais e tipagens
-    │   └── services/        # Serviços globais da aplicação
-    ├── pages/               # Componentes inteligentes (smart components) servindo como páginas roteáveis
-    │   ├── home/            # Página inicial
-    │   ├── login/           # Página de autenticação
-    │   └── pedido-detalhe/  # Página de detalhes do pedido
-    ├── app.config.ts        # Configuração global da aplicação Angular (providers)
-    ├── app.config.server.ts # Configuração global para o servidor (SSR)
-    ├── app.routes.ts        # Definições das rotas da aplicação
-    └── app.component.ts     # Componente raiz
+    ├── core/                    # Lógica principal da aplicação e configurações
+    │   ├── api.service.ts       # Configuração da instância do Axios
+    │   ├── environment.ts       # Variáveis de ambiente
+    │   ├── models/              # Interfaces TypeScript globais e tipagens
+    │   └── services/            # Serviços globais da aplicação
+    ├── pages/                   # Componentes inteligentes (smart components) servindo como páginas roteáveis
+    │   ├── home/                # Página inicial
+    │   ├── login/               # Página de autenticação
+    |   ├── pedido-confirmação/  # Página de confirmação do pedido
+    │   ├── pedido-detalhe/      # Página de detalhes do pedido
+    |   └── perfil/              # Página do perfil do usuário
+    ├── app.config.ts            # Configuração global da aplicação Angular (providers)
+    ├── app.config.server.ts     # Configuração global para o servidor (SSR)
+    ├── app.routes.ts            # Definições das rotas da aplicação
+    └── app.component.ts         # Componente raiz
 ```
 
 - **Core** — armazena variáveis de ambiente, instâncias do Axios (biblioteca para requisições HTTP), models com a representação do input/retorno da API e services para interação com a API e com os componentes da página
