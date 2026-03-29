@@ -1,5 +1,4 @@
 using AutoMapper;
-using PitLaneShop.Model.Entities;
 using PitLaneShop.Model.Repositories;
 using PitLaneShop.Services.Abstractions;
 using PitLaneShop.Services.Features.Pedido.Dtos;
@@ -11,19 +10,19 @@ namespace PitLaneShop.Services.Features.Pedido.Implementation;
 public class PedidoService
     : BaseCrudService<PedidoEntity, PedidoResponseDto, CreatePedidoDto, UpdatePedidoDto>, IPedidoService
 {
-    private readonly IProdutoRepository _produtoRepository;
+    private readonly IPedidoItemBuilder _pedidoItemBuilder;
     private readonly ICodigoPromocionalRepository _codigoPromocionalRepository;
 
     public PedidoService(
         IPedidoRepository repository,
         IUnitOfWork unitOfWork,
         IMapper mapper,
-        IProdutoRepository produtoRepository,
-        ICodigoPromocionalRepository codigoPromocionalRepository)
-        : base(repository, unitOfWork, mapper)
+        ICodigoPromocionalRepository codigoPromocionalRepository,
+        IPedidoItemBuilder pedidoItemBuilder
+        ) : base(repository, unitOfWork, mapper)
     {
-        _produtoRepository = produtoRepository;
         _codigoPromocionalRepository = codigoPromocionalRepository;
+        _pedidoItemBuilder = pedidoItemBuilder;
     }
 
     public override async Task<PedidoResponseDto> CreateAsync(
@@ -31,9 +30,9 @@ public class PedidoService
         CancellationToken cancellationToken = default)
     {
         var pedido = new PedidoEntity(DateOnly.FromDateTime(DateTime.UtcNow), dto.ClienteId, dto.CodigoPromocionalId);
-        await AdicionarItensNoPedido(dto, pedido, cancellationToken);
-        decimal percentualDesconto = await VerificarDesconto(dto, cancellationToken);
-
+        await _pedidoItemBuilder.AdicionarItensNoPedidoAsync(dto, pedido, cancellationToken);
+        var percentualDesconto = await _codigoPromocionalRepository.ObterPercentualDescontoAsync(dto.CodigoPromocionalId, cancellationToken);
+       
         pedido.CalcularTotal(percentualDesconto);
 
         await Repository.AddAsync(pedido, cancellationToken);
@@ -63,37 +62,5 @@ public class PedidoService
     {
         var pedidos = await ((IPedidoRepository)Repository).GetPedidosPorClienteIdAsync(clienteId, cancellationToken);
         return Mapper.Map<IEnumerable<PedidoResponseDto>>(pedidos);
-    }
-
-    private async Task<decimal> VerificarDesconto(CreatePedidoDto dto, CancellationToken cancellationToken)
-    {
-        decimal percentualDesconto = 0;
-        if (dto.CodigoPromocionalId.HasValue)
-        {
-            var codigo = await _codigoPromocionalRepository.GetByIdAsync(
-                dto.CodigoPromocionalId.Value, cancellationToken);
-
-            if (codigo is not null && codigo.EhValido)
-                percentualDesconto = codigo.Desconto;
-        }
-
-        return percentualDesconto;
-    }
-
-    private async Task AdicionarItensNoPedido(CreatePedidoDto dto, PedidoEntity pedido, CancellationToken cancellationToken)
-    {
-        foreach (var itemDto in dto.Itens)
-        {
-            var produto = await _produtoRepository.GetByIdAsync(itemDto.ProdutoId, cancellationToken)
-                ?? throw new InvalidOperationException($"Produto '{itemDto.ProdutoId}' não encontrado.");
-
-            if (produto.QuantidadeEstoque < itemDto.Quantidade)
-                throw new InvalidOperationException(
-                    $"Estoque insuficiente para '{produto.Nome}'. Disponível: {produto.QuantidadeEstoque}, solicitado: {itemDto.Quantidade}.");
-
-            produto.DecrementarEstoque(itemDto.Quantidade);
-            var item = new ItemPedido(produto.Preco, itemDto.Quantidade, produto.Nome, pedido.Id, produto.Id);
-            pedido.AdicionarItem(item);
-        }
     }
 }

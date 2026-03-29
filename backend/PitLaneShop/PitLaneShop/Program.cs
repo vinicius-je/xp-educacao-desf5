@@ -30,6 +30,7 @@ builder.Services.AddScoped<IProdutoRepository, ProdutoRepository>();
 builder.Services.AddScoped<ICodigoPromocionalRepository, CodigoPromocionalRepository>();
 
 builder.Services.AddScoped<IClienteService, ClienteService>();
+builder.Services.AddScoped<IPedidoItemBuilder, PedidoItemBuilder>();
 builder.Services.AddScoped<IPedidoService, PedidoService>();
 builder.Services.AddScoped<IProdutoService, ProdutoService>();
 builder.Services.AddScoped<ICodigoPromocionalService, CodigoPromocionalService>();
