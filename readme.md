@@ -6,7 +6,21 @@
 
 ## 1. Introdução
 
-A **PitLaneShop** é uma grande empresa de vendas de produtos automotivos online que necessita da implantação de uma solução para disponibilizar publicamente dados de Cliente, Produto e Pedido aos seus parceiros comerciais. Além das funcionalidades de CRUD solicitadas, tomei a iniciativa de expandir o escopo do projeto, incorporando os domínios de pedidos e códigos promocionais, bem como a implementação do fluxo completo de realização de compras no sistema.
+### 1.1 Enunciado do desafio
+
+Você é Arquiteto(a) de Software em uma grande empresa de vendas on-line. 
+Você é responsável por construir e implantar uma solução que disponibilize 
+publicamente dados de Cliente/Produto/Pedido (algum domínio) aos 
+parceiros da empresa. 
+
+Para isso, você vai Projetar, Documentar e Implantar uma API REST, no 
+padrão arquitetural MVC, que exponha um endpoint capaz de realizar um 
+CRUD dos dados (e um pouco mais).
+
+
+### 1.2 Adaptação do enunciado para esse projeto
+A **PitLaneShop** é uma empresa do ramo de produtos automotivos que, por meio de uma plataforma online, busca atender às necessidades de seus clientes com eficiência e praticidade. Para fortalecer sua atuação no mercado, a empresa demandou o desenvolvimento de uma solução capaz de disponibilizar publicamente dados de Cliente, Produto e Pedido aos seus parceiros comerciais.
+Além das funcionalidades de CRUD solicitadas, tomei a iniciativa de expandir o escopo do projeto, incorporando os domínios de Pedidos e Códigos Promocionais, bem como o fluxo completo de realização de compras no sistema.
 
 ---
 
@@ -198,17 +212,25 @@ Visando o entendimento dos usuários finais (clientes e parceiros) que interagem
 
 ![Diagrama de Contexto](imagens/diagrama-contexto-nivel-1.png)
 
-### 7.2 Diagrama de Containers (Nível 2)
+### 7.2 Diagrama de Contêineres (Nível 2)
 
-O **Diagrama de Containers**, correspondente ao Nível 2 do modelo C4, foi elaborado com o objetivo de proporcionar uma visão técnica clara do sistema, permitindo:
+O **Diagrama de Contêineres**, correspondente ao Nível 2 do modelo C4, foi elaborado com o objetivo de proporcionar uma visão técnica clara do sistema, permitindo:
 
 - Compreender o fluxo de requisições do cliente dentro do sistema
 - Identificar as tecnologias utilizadas em cada contêiner e suas responsabilidades
 - Visualizar as relações e comunicações estabelecidas entre os contêineres
 
-![Diagrama de Containers](imagens/diagrama-container-nivel-2.png)
+![Diagrama de Contêineres](imagens/diagrama-container-nivel-2.png)
 
-### 7.3 Diagrama de Código (Nível 4)
+### 7.3 Diagrama de Componentes (Nível 3)
+
+Com o objetivo de compreender os componentes em maior detalhe, o **Diagrama de Componentes**, correspondente ao nível 3 do modelo C4, foi desenvolvido com foco no **fluxo de solicitação do processamento de um pedido**.
+O contêiner selecionado como base é o de backend, conforme apresentado no diagrama de contêineres do tópico anterior. O fluxo se inicia com o cliente realizando uma requisição por meio de um SPA. O Controller recebe a requisição e a redireciona ao serviço responsável pelo processamento do pedido, repassando os parâmetros recebidos. O serviço, por sua vez, é responsável por validar os dados de entrada, carregar suas dependências, como os repositórios de interação com o banco de dados relativos aos domínios envolvidos, e executar as regras de negócio aplicáveis. Por envolver múltiplos domínios em sua composição, a transação do pedido deve ser atômica; para isso, é utilizado o padrão arquitetural Unit of Work, garantindo a integridade dos dados e o sucesso do armazenamento.
+
+![Diagrama de Componentes](imagens/diagrama-componentes-nivel-3.png)
+
+
+### 7.4 Diagrama de Código (Nível 4)
 
 Com o objetivo de demonstrar o fluxo completo de uma requisição, foi desenvolvido o Diagrama de Código do Nível 4 do C4. Como objeto de análise, foi selecionado o domínio do **Pedido**.
 
