@@ -31,7 +31,7 @@ public class PedidoService
         CancellationToken cancellationToken = default)
     {
         var pedido = new PedidoEntity(DateOnly.FromDateTime(DateTime.UtcNow), dto.ClienteId, dto.CodigoPromocionalId);
-        await AdicionarItensNoPedito(dto, pedido, cancellationToken);
+        await AdicionarItensNoPedido(dto, pedido, cancellationToken);
         decimal percentualDesconto = await VerificarDesconto(dto, cancellationToken);
 
         pedido.CalcularTotal(percentualDesconto);
@@ -80,7 +80,7 @@ public class PedidoService
         return percentualDesconto;
     }
 
-    private async Task AdicionarItensNoPedito(CreatePedidoDto dto, PedidoEntity pedido, CancellationToken cancellationToken)
+    private async Task AdicionarItensNoPedido(CreatePedidoDto dto, PedidoEntity pedido, CancellationToken cancellationToken)
     {
         foreach (var itemDto in dto.Itens)
         {
