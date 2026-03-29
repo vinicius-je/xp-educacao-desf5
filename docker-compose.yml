@@ -12,7 +12,7 @@ services:
     restart: unless-stopped
 
   backend:
-    image: ghcr.io/vinicius-je/xp-educacao-desf5@sha256:d5975ab728a3c3f9cdd7baeff412d0b4b15399d0b9659cdc5e8ba5559d111bbe
+    image: ghcr.io/vinicius-je/xp-educacao-desf5@sha256:fb8055c4f035f94f5dd3355bc4015b4470788a91b178ee6143ebb1434bd24821
     container_name: pitlaneshop-backend
     depends_on:
       - sqlserver
@@ -24,7 +24,7 @@ services:
     restart: unless-stopped
 
   frontend:
-    image: ghcr.io/vinicius-je/xp-educacao-desf5-frontend@sha256:42ff37ea51c247d8b89cb4bcb7807a2628004411f35f222bd39d57589d16e89c
+    image: ghcr.io/vinicius-je/xp-educacao-desf5-frontend@sha256:9f1f7c4517b5cdb93c6634ce617b48d627346891d5103551e9145fdf64f634d4
     container_name: pitlaneshop-frontend
     ports:
       - '4000:4000'
