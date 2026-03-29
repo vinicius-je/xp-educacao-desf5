@@ -269,6 +269,14 @@ Para as classes de serviço, a mesma abordagem foi aplicada, mantendo as impleme
 - [**ProdutoController** (`ProdutosController`)](backend/PitLaneShop/PitLaneShop/Controllers/ProdutosController.cs): Controlador que expõe os endpoints HTTP específicos da entidade Produto.
 - [**ProdutoRepository**](backend/PitLaneShop/PitLaneShop/Persistence/Repositories/ProdutoRepository.cs): Repositório concreto dedicado à persistência e consulta dos dados da entidade Produto no banco.
 
+Componentes para processar um pedido:
+
+- [**Pedido**](backend/PitLaneShop/PitLaneShop/Model/Entities/Pedido.cs): Classe referente à entidade de domínio.
+- [**PedidoService**](backend/PitLaneShop/PitLaneShop/Services/Features/Pedido/Implementation/PedidoService.cs): Classe de serviço contendo o fluxo de validações e regras de negócio para a entidade Pedido.
+- [**PedidoController** (`PedidosController`)](backend/PitLaneShop/PitLaneShop/Controllers/PedidosController.cs): Controlador que expõe os endpoints HTTP específicos da entidade Pedido.
+- [**PedidoRepository**](backend/PitLaneShop/PitLaneShop/Persistence/Repositories/PedidoRepository.cs): Repositório concreto dedicado à persistência e consulta dos dados da entidade Pedido no banco.
+
+
 Outros domínios seguem a mesma estrutura de implementação como por exemplo:
 - Cliente
 - Pedidos
